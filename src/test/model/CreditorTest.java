@@ -7,10 +7,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CreditorTest {
     private Creditor creditor;
+    private Creditor creditor2;
+    private Bank bank;
 
     @BeforeEach
     void setUp() {
         creditor = new Creditor("Safi");
+        Bank.getBank(2000);
+        bank = Bank.getBank();
     }
 
     @Test
@@ -32,12 +36,7 @@ class CreditorTest {
         assertEquals(100, creditor.getOwed());
     }
 
-    @Test
-    void testPaymentReceived() {
-        creditor.addOwed(100);
-        creditor.paymentReceived(50);
-        assertEquals(50, creditor.getOwed());
-    }
+
 
     @Test
     void testGetName() {
@@ -51,6 +50,12 @@ class CreditorTest {
         creditor.setName("Safiullah");
         assertEquals("Safiullah", creditor.getName());
     }
-
+    @Test
+    void testPaymentReceived() {
+        creditor2 = new Creditor("Safiu");
+        creditor2.addOwed(100);
+        creditor2.paymentReceived(50);
+        assertEquals(50, creditor2.getOwed());
+    }
 }
 
