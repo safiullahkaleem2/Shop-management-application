@@ -40,7 +40,7 @@ public class JsonReader {
         return contentBuilder.toString();
     }
 
-    // EFFECTS: parses workroom from JSON object and returns it
+    // EFFECTS: parses Inventory from JSON object and returns it
     private Inventory parseInventory(JSONObject jsonObject) {
         Inventory inventory = Inventory.getInventory();
         addItems(inventory, jsonObject);

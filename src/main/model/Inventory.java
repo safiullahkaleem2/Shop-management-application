@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class Inventory implements Writable {
     private static Inventory inventory;
     private ArrayList<Item> items;
-    protected static final int CAPACITY = 50;
+    protected static final int CAPACITY = 4;
 
     private Inventory() {
         items = new ArrayList<Item>();
@@ -52,7 +52,7 @@ public class Inventory implements Writable {
             }
 
         }
-        System.out.println("Cannot find the Item. Please check your spelling");
+
         return false;
     }
 
@@ -116,7 +116,7 @@ public class Inventory implements Writable {
         return json;
     }
 
-    // EFFECTS: returns things in this workroom as a JSON array
+    // EFFECTS: returns items in Inventory as a JSON array
     private JSONArray itemsToJson() {
         JSONArray jsonArray = new JSONArray();
 
