@@ -56,5 +56,6 @@ public class CreditSalesTest {
         creditSales.recordCreditReturn("item1", "creditor1", 10, 5);
         assertEquals(-1, creditor.getOwed());
         assertEquals(18, inventory.giveItem("item1").getQuantity());
+        creditSales.recordCreditReturn("item10", "creditor1", 10, 5);
     }
 }

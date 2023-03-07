@@ -8,10 +8,12 @@ import static org.junit.jupiter.api.Assertions.*;
     public class ItemTest {
         private Item item;
         private Item item2;
+        private Item item3;
 
         public ItemTest(){
             item = new Item("Book", 5, "piece", 2);
             item2 = new Item("Apples", 5, "kgs", 10);
+            item3 = new Item("Apples", 5, "kgs", 5);
         }
 
 
@@ -57,7 +59,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
         @Test
         void testBelowThreshold() {
+
             assertFalse(item.belowThreshold());
+            assertTrue(item2.belowThreshold());
+            assertFalse(item3.belowThreshold());
         }
 
         @Test

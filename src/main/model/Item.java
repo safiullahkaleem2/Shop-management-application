@@ -3,6 +3,9 @@ package model;
 import org.json.JSONObject;
 import persistance.Writable;
 
+import java.util.Collections;
+import java.util.List;
+
 public class Item implements Writable {
 
     private String itemName;
@@ -101,4 +104,7 @@ public class Item implements Writable {
 
         return json;
     }
+
+    // EFFECTS: returns an unmodifiable list of thingies in this workroom
+
 }
