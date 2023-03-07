@@ -2,24 +2,33 @@ package ui;
 
 import model.*;
 import model.exceptions.InsufficientBalanceException;
+import persistance.JsonReader;
+import persistance.JsonWriter;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 // Shop Management application
 
 public class ShopManagement {
-    private Bank bank;
-    private Inventory inventory;
-    private Item item;
+    private static final String JSON_STORE = "./data/inventory.json";
     private Creditors creditors;
     private Creditor creditor;
     private CashSales cashSales;
     private CreditSales creditSales;
-
+    private Bank bank;
+    private Inventory inventory;
+    private JsonWriter jsonWriter;
+    private JsonReader jsonReader;
     private Scanner input;
 
+
     // EFFECTS: runs the teller application
-    public ShopManagement() {
+    public ShopManagement() throws FileNotFoundException {
+
+        jsonWriter = new JsonWriter(JSON_STORE);
+        jsonReader = new JsonReader(JSON_STORE);
         runShopManagement();
     }
 
@@ -27,7 +36,7 @@ public class ShopManagement {
     // EFFECTS: processes user input
     private void runShopManagement() {
         boolean keepGoing = true;
-        String command = null;
+        String command;
 
         init();
 
@@ -49,16 +58,28 @@ public class ShopManagement {
     // MODIFIES: this
     // EFFECTS: processes user command
     private void processCommand(String command) {
-        if (command.equals("b")) {
-            checkBank();
-        } else if (command.equals("i")) {
-            manageInventory();
-        } else if (command.equals("c")) {
-            manageCreditors();
-        } else if (command.equals("t")) {
-            manageTransaction();
-        } else {
-            System.out.println("Selection not valid...");
+        switch (command) {
+            case "b":
+                checkBank();
+                break;
+            case "i":
+                manageInventory();
+                break;
+            case "c":
+                manageCreditors();
+                break;
+            case "t":
+                manageTransaction();
+                break;
+            case "s":
+                saveInventory();
+                break;
+            case "l":
+                loadInventory();
+                break;
+            default:
+                System.out.println("Selection not valid...");
+                break;
         }
     }
 
@@ -79,8 +100,10 @@ public class ShopManagement {
                 input.next();
             }
         }
-        bank = new Bank(balance);
-        inventory = new Inventory();
+
+        Bank.getBank(balance);
+        bank = Bank.getBank();
+        inventory = Inventory.getInventory();
         creditors = new Creditors();
         input = new Scanner(System.in);
         input.useDelimiter("\n");
@@ -94,6 +117,8 @@ public class ShopManagement {
         System.out.println("\ti -> Manage inventory");
         System.out.println("\tc -> Manage creditors");
         System.out.println("\tt -> Perform a transaction");
+        System.out.println("\ts -> save Inventory to file");
+        System.out.println("\tl -> load Inventory from file");
         System.out.println("\tq -> Quit");
     }
 
@@ -108,21 +133,26 @@ public class ShopManagement {
         String selection = input.next();
         selection = selection.toLowerCase();
 
-        if (selection.equals("b")) {
-            System.out.println("Balance: " + Bank.getBalance());
-        } else if (selection.equals("r")) {
-            System.out.println("Receipts: " + Bank.getReceipts());
-        } else if (selection.equals("p")) {
-            System.out.println("Payments: " + Bank.getPayments());
-        } else {
-            System.out.println("Selection not valid...");
+        switch (selection) {
+            case "b":
+                System.out.println("Balance: " + bank.getBalance());
+                break;
+            case "r":
+                System.out.println("Receipts: " + bank.getReceipts());
+                break;
+            case "p":
+                System.out.println("Payments: " + bank.getPayments());
+                break;
+            default:
+                System.out.println("Selection not valid...");
+                break;
         }
     }
 
     // MODIFIES: this
     // EFFECTS: directs to changing inventory details
     private void manageInventory() {
-        String command = null;
+        String command;
         while (true) {
             inventoryMenu();
             command = input.next();
@@ -211,12 +241,12 @@ public class ShopManagement {
             System.out.println("Item with name " + name + " does not exist in inventory.");
             return;
         }
-        item = inventory.giveItem(name);
+        Item item = inventory.giveItem(name);
         if (item != null) {
             if (item.getQuantity() < item.getThreshold()) {
                 System.out.println("Quantity for " + name + " is lower than the threshold" + item.getThreshold());
             } else {
-                System.out.println("Quantity for " + name + " is higher than the threshold" + item.getThreshold());
+                System.out.println("Quantity for " + name + " is higher than the threshold " + item.getThreshold());
             }
 
         } else {
@@ -228,7 +258,7 @@ public class ShopManagement {
     // EFFECTS: prints list of all inventory items
     private void allInventoryItems() {
         System.out.println("Inventory:");
-        for (int n = 0;n < inventory.length(); n++) {
+        for (int n = 0;n < Inventory.getInventory().length(); n++) {
             Item item = inventory.get(n);
             System.out.println(item.getItemName() + ": " + item.getQuantity() + item.getUnit());
         }
@@ -249,7 +279,7 @@ public class ShopManagement {
     // MODIFIES: this
     // EFFECTS: directs to managing creditors
     private void manageCreditors() {
-        String command = null;
+        String command;
         while (true) {
             creditorsMenu();
             command = input.next();
@@ -301,7 +331,7 @@ public class ShopManagement {
         String name = input.next();
         name = name.toLowerCase();
         creditor = new Creditor(name);
-        creditors.addCreditors(this.creditor);
+        Creditors.addCreditors(this.creditor);
     }
 
     // MODIFIES: this
@@ -320,7 +350,7 @@ public class ShopManagement {
         System.out.print("Enter creditor name: ");
         String name = input.next();
         name = name.toLowerCase();
-        this.creditor = creditors.getCreditor(name);
+        this.creditor = Creditors.getCreditor(name);
 
         System.out.print("Enter payment amount: ");
         double paymentAmount = input.nextDouble();
@@ -336,7 +366,7 @@ public class ShopManagement {
 
     // EFFECTS: manages transactions
     private void manageTransaction() {
-        String command = null;
+        String command;
 
         while (true) {
             transactionMenu();
@@ -439,6 +469,28 @@ public class ShopManagement {
 
     }
 
+    // EFFECTS: saves the workroom to file
+    private void saveInventory() {
+        try {
+            jsonWriter.open();
+            jsonWriter.write(inventory);
+            jsonWriter.close();
+            System.out.println("Saved Inventory to " + JSON_STORE);
+        } catch (FileNotFoundException e) {
+            System.out.println("Unable to write to file: " + JSON_STORE);
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: loads workroom from file
+    private void loadInventory() {
+        try {
+            inventory = jsonReader.read();
+            System.out.println("Loaded Inventory from " + JSON_STORE);
+        } catch (IOException e) {
+            System.out.println("Unable to read from file: " + JSON_STORE);
+        }
+    }
 
 
 }

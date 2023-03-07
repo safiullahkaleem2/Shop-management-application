@@ -1,32 +1,31 @@
 package model;
 
-public class Item {
-    private final int itemNumber;
+import org.json.JSONObject;
+import persistance.Writable;
+
+public class Item implements Writable {
+
     private String itemName;
     private int quantity;
     private final String unit;
 
     private int threshold;
-    int lastItemNo = 0;
+
 
     // Requires: Non-null String values for itemName and unit, and non-negative int value for threshold.
     // Effects: Creates a new Item object with the given values for itemName, quantity, unit, and threshold.
     //          Initializes itemNumber to a unique value greater than the last itemNumber.
-    Item(String itemName, int quantity, String unit, int threshold) {
+    public Item(String itemName, int quantity, String unit, int threshold) {
 
 
-        this.itemNumber = lastItemNo + 1;
-        lastItemNo =  itemNumber;
+
         this.itemName = itemName;
         this.quantity = quantity;
         this.unit = unit;
         this.threshold = threshold;
     }
 
-    // Effects: Returns the value of itemNumber.
-    public int getItemNumber() {
-        return itemNumber;
-    }
+
 
     // Effects: Returns the value of itemName.
     public String getItemName() {
@@ -91,6 +90,15 @@ public class Item {
         quantity = quantity - amount;
     }
 
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
 
+        json.put("itemName", itemName);
+        json.put("quantity", Integer.toString(quantity));
+        json.put("unit", unit);
+        json.put("threshold", Integer.toString(threshold));
 
+        return json;
+    }
 }

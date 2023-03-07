@@ -1,4 +1,4 @@
 package model.exceptions;
 
-public class InsufficientBalanceException extends Throwable {
+public class InsufficientBalanceException extends Exception {
 }

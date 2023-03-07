@@ -1,16 +1,27 @@
 package model;
 
 import model.exceptions.InsufficientBalanceException;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import persistance.Writable;
 
 import java.util.ArrayList;
 
 
-public class Inventory {
-    protected static ArrayList<Item> inventory;
+public class Inventory implements Writable {
+    private static Inventory inventory;
+    private ArrayList<Item> items;
     protected static final int CAPACITY = 50;
 
-    public Inventory() {
-        inventory = new ArrayList<Item>();
+    private Inventory() {
+        items = new ArrayList<Item>();
+    }
+
+    public static Inventory getInventory() {
+        if (inventory == null) {
+            inventory = new Inventory();
+        }
+        return inventory;
     }
 
     // requires: item is not null
@@ -18,8 +29,8 @@ public class Inventory {
     // effects: if inventory is not full and the item is not already present in inventory,
     // add the item to inventory and return true, otherwise return false
     public boolean addItem(Item item) {
-        if (inventory.size() < CAPACITY && !isItemPresent(item.getItemName())) {
-            inventory.add(item);
+        if (inventory.items.size() < CAPACITY && !isItemPresent(item.getItemName())) {
+            inventory.items.add(item);
             return true;
         } else {
             return false;
@@ -31,10 +42,10 @@ public class Inventory {
     // effects: if an item with the given name is present in inventory, remove it from inventory and return true,
     // otherwise print an error message and return false
     public boolean removeItem(String name) {
-        for (int n = 0;n < inventory.size(); n = n + 1) {
-            Item item = inventory.get(n);
+        for (int n = 0;n < inventory.items.size(); n = n + 1) {
+            Item item = inventory.items.get(n);
             if (name.equals(item.getItemName())) {
-                inventory.remove(n);
+                inventory.items.remove(n);
                 System.out.println("Item removed successfully");
                 return true;
 
@@ -54,19 +65,19 @@ public class Inventory {
     // add the item to inventory and return true, otherwise throw an InsufficientBalanceException and return false
     public boolean boughtNewItem(String name, int quantity, String unit, int threshold, double price)
             throws InsufficientBalanceException {
-        if (Bank.getBalance() < price) {
+        if (Bank.getBank().getBalance() < price) {
             throw new InsufficientBalanceException();
         }
-        Bank.subtractBalance(price);
+        Bank.getBank().subtractBalance(price);
         Item item = new Item(name, quantity, unit, threshold);
-        return inventory.add(item);
+        return inventory.items.add(item);
     }
 
     // requires: name is not null
     // modifies: none
     // effects: return true if an item with the given name is present in inventory, otherwise return false
     public boolean isItemPresent(String name) {
-        for (Item item : inventory) {
+        for (Item item : items) {
             if (item.getItemName().equals(name)) {
                 return true;
             }
@@ -77,9 +88,9 @@ public class Inventory {
     // requires: name is not null
     // modifies: none
     // effects: if an item with the given name is present in inventory, return it, otherwise return null
-    public static Item giveItem(String name) {
-        for (int n = 0; n < inventory.size(); n++) {
-            Item item = inventory.get(n);
+    public  Item giveItem(String name) {
+        for (int n = 0; n < inventory.items.size(); n++) {
+            Item item = inventory.items.get(n);
             if (item.getItemName().equals(name)) {
                 return item;
             }
@@ -91,14 +102,28 @@ public class Inventory {
     // modifies: none
     // effects: return the number of items in inventory
     public int length() {
-        return inventory.size();
+        return inventory.items.size();
     }
 
-    // requires: 0 <= n < inventory.size()
-    // modifies: none
-    // effects: return the item at the given index in inventory
     public Item get(int n) {
-        return inventory.get(n);
+        return inventory.items.get(n);
     }
 
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("items", itemsToJson());
+        return json;
+    }
+
+    // EFFECTS: returns things in this workroom as a JSON array
+    private JSONArray itemsToJson() {
+        JSONArray jsonArray = new JSONArray();
+
+        for (Item i : inventory.items) {
+            jsonArray.put(i.toJson());
+        }
+
+        return jsonArray;
+    }
 }

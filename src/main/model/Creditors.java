@@ -3,8 +3,8 @@ package model;
 import java.util.ArrayList;
 
 public class Creditors  {
-    protected Creditor creditor;
-    protected static ArrayList<Creditor> creditors;
+
+    private static ArrayList<Creditor> creditors;
 
     public Creditors() {
         creditors =  new ArrayList<Creditor>();

@@ -2,9 +2,6 @@ package model;
 
 public class CashSales {
 
-    public CashSales() {
-
-    }
 
     // REQUIRES: itemName is not null
     // MODIFIES: Inventory, Bank
@@ -12,14 +9,14 @@ public class CashSales {
     // reduce the quantity of the item by the given quantity, add the price to the bank balance, and print "Transaction
     // successful and your bank balance is updated". Otherwise, print an appropriate error message.
     public void sales(String itemName, int quantity, double price) {
-        Item item = Inventory.giveItem(itemName);
+        Item item = Inventory.getInventory().giveItem(itemName);
         if (item == null) {
             System.out.println("Item not found in inventory");
         } else if (item.getQuantity() < quantity) {
             System.out.println("Not enough quantity in inventory");
         } else {
             item.reduceQuantity(quantity);
-            Bank.addBalance(price);
+            Bank.getBank().addBalance(price);
             System.out.println("Transaction successful and your bank balance is updated");
         }
 
@@ -31,12 +28,12 @@ public class CashSales {
     // subtract the price from the bank balance, and print "Return successfully recorded". Otherwise, print an
     // appropriate error message.
     public void cashReturn(String itemName, int quantity, double price) {
-        Item item = Inventory.giveItem(itemName);
+        Item item = Inventory.getInventory().giveItem(itemName);
         if (item == null) {
             System.out.println("Item not found in inventory");
         } else {
             item.increaseQuantity(quantity);
-            Bank.subtractBalance(price);
+            Bank.getBank().subtractBalance(price);
             System.out.println("Return successfully recorded");
         }
     }

@@ -15,7 +15,7 @@ public class CreditSales  {
 
     public void sales(String itemName, String creditorName, int quantity, double price) {
         Creditor creditor;
-        Item item = Inventory.giveItem(itemName);
+        Item item = Inventory.getInventory().giveItem(itemName);
         if (item == null) {
             System.out.println("Item not found in inventory");
         } else if (item.getQuantity() < quantity) {
@@ -46,7 +46,7 @@ public class CreditSales  {
         if (null == Creditors.getCreditor(creditorName)) {
             System.out.println("Can not find the given creditor");
         } else {
-            Item item = Inventory.giveItem(itemName);
+            Item item = Inventory.getInventory().giveItem(itemName);
             increaseInventory(item, creditor, quantity, price);
         }
 

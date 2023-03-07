@@ -1,20 +1,33 @@
 package model;
 
 public class Bank {
-    private static double receipts;
-    private static double payments;
-    private static double balance;
+    private double receipts;
+    private double payments;
+    private double balance;
+    private static Bank bank;
 
-    public Bank(double balance) {
+    private Bank(double balance) {
         receipts = balance;
         payments = 0;
-        Bank.balance = balance;
+        this.balance = balance;
+    }
+
+
+
+    public static Bank getBank() {
+        return bank;
+    }
+
+    public static void getBank(double balance) {
+        if (bank == null) {
+            bank = new Bank(balance);
+        }
     }
 
     // Requires: amount to be a valid double value
     // Modifies: balance and receipts fields of Bank class
     // Effects: adds the amount to the balance and receipts fields
-    public static void addBalance(double amount) {
+    public void addBalance(double amount) {
         balance += amount;
         receipts += amount;
     }
@@ -23,7 +36,7 @@ public class Bank {
     // Modifies: balance and payments fields of Bank class
     // Effects: subtracts the amount from the balance field, adds the amount to the payments field, and returns true.
     // If the balance is less than the amount, returns false without modifying the fields.
-    public static boolean subtractBalance(double amount) {
+    public boolean subtractBalance(double amount) {
         if (balance >= amount) {
             balance -= amount;
             payments += amount;
@@ -34,17 +47,17 @@ public class Bank {
     }
 
     // Effects: Returns the value of Balance
-    public static double getBalance() {
+    public  double getBalance() {
         return balance;
     }
 
     // Effects: Returns the value of payments
-    public static double getPayments() {
+    public double getPayments() {
         return payments;
     }
 
     // Effects: Returns the value of receipts.
-    public static double getReceipts() {
+    public double getReceipts() {
         return receipts;
     }
 }

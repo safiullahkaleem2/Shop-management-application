@@ -47,3 +47,5 @@ that have been sold.
 falls below the limit, so that I can reorder items before I run out of stock.
 - As a user, I want to be able to generate reports of my sales and inventory, so that I can analyze my business
 performance.
+- As a user, I want to save my items in Inventory.
+- As a user, I want to load my Inventory items from a file

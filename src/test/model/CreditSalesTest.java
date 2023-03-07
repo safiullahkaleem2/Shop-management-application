@@ -15,11 +15,12 @@ public class CreditSalesTest {
     public void setup() {
         creditSales = new CreditSales();
         creditors = new Creditors();
-        inventory = new Inventory();
+        inventory = Inventory.getInventory();
         Item item1 = new Item("item1", 10, "piece", 5);
         Item item2 = new Item("item2", 5, "piece", 10);
         inventory.addItem(item1);
         inventory.addItem(item2);
+        inventory.giveItem("item1").getQuantity();
     }
 
     @Test
@@ -29,13 +30,13 @@ public class CreditSalesTest {
         assertEquals(1, creditors.size());
         Creditor creditor = creditors.getCreditor("creditor1");
         assertEquals(10, creditor.getOwed());
-        assertEquals(5, inventory.giveItem("item1").getQuantity());
+        assertEquals(13, inventory.giveItem("item1").getQuantity());
 
         creditSales.sales("item2", "creditor1", 5, 10);
         assertEquals(20, creditor.getOwed());
         assertEquals(0, inventory.giveItem("item2").getQuantity());
 
-        creditSales.sales("item1", "creditor1", 5, 10);
+        creditSales.sales("item1", "creditor1", 13, 10);
         assertEquals(30, creditor.getOwed());
         assertEquals(0, inventory.giveItem("item1").getQuantity());
     }

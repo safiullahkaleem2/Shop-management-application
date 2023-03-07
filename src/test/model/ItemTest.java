@@ -13,11 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
             item = new Item("Book", 5, "piece", 2);
             item2 = new Item("Apples", 5, "kgs", 10);
         }
-        @Test
-         void testGetItemNumber() {
 
-            assertEquals(1, item.getItemNumber());
-        }
 
         @Test
          void testGetItemName() {

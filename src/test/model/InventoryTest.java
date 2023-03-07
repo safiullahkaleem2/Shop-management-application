@@ -13,9 +13,10 @@ class InventoryTest {
 
 
     public InventoryTest() {
-        inventory = new Inventory();
+        inventory = Inventory.getInventory();
         item = new Item("item1", 10, "unit1", 5);
-        bank = new Bank(50000);
+        Bank.getBank(50000);
+        bank = Bank.getBank();
 
     }
 
