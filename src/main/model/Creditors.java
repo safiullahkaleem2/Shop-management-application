@@ -5,7 +5,6 @@ import org.json.JSONObject;
 import persistance.Writable;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 // The Creditors class represents a list of creditors. It contains methods for adding, removing, and retrieving
 // creditors from the list, as well as methods for getting the total amount owed by all creditors and the number of
@@ -29,7 +28,6 @@ public class Creditors implements Writable {
     // Effects: Adds a new creditor to the list of creditors, prints a success message to the console
     public static void addCreditors(Creditor creditor) {
         creditors.add(creditor);
-        System.out.println("Creditor added successfully");
 
     }
 
@@ -115,8 +113,6 @@ public class Creditors implements Writable {
     }
 
     public List<Creditor> getCreditors() {
-        return Collections.unmodifiableList(creditors);
+        return creditors;
     }
-
-
 }

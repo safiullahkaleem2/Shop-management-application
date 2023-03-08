@@ -12,9 +12,6 @@ import java.util.Scanner;
 // Shop Management application
 
 public class ShopManagement {
-    private static final String JSON_STORE = "./data/inventory.json";
-    private static final String JSON_STORE2 = "./data/creditors.json";
-    private static final String JSON_STORE3 = "./data/bank.json";
     private Creditors creditors;
     private Creditor creditor;
     private CashSales cashSales;
@@ -40,14 +37,18 @@ public class ShopManagement {
         init();
 
         while (keepGoing) {
-            displayMenu();
-            command = input.next();
-            command = command.toLowerCase();
-
-            if (command.equals("q")) {
-                keepGoing = false;
+            if (bank == null) {
+                init2();
             } else {
-                processCommand(command);
+                displayMenu();
+                command = input.next();
+                command = command.toLowerCase();
+
+                if (command.equals("q")) {
+                    keepGoing = false;
+                } else {
+                    processCommand(command);
+                }
             }
         }
 
@@ -102,7 +103,6 @@ public class ShopManagement {
                 load(selection2);
                 break;
             case "n":
-                init2();
                 break;
             default:
                 System.out.println("Selection not valid...");
@@ -356,6 +356,7 @@ public class ShopManagement {
         name = name.toLowerCase();
         creditor = new Creditor(name);
         Creditors.addCreditors(this.creditor);
+        System.out.println("Creditor added successfully");
     }
 
     // MODIFIES: this

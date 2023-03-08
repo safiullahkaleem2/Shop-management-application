@@ -32,6 +32,7 @@ public class CreditSales  {
             if (null == Creditors.getCreditor(creditorName)) {
                 creditor = new Creditor(creditorName);
                 Creditors.addCreditors(creditor);
+                System.out.println("Creditor added successfully");
             } else {
                 creditor = Creditors.getCreditor(creditorName);
             }
