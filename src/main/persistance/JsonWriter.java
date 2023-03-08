@@ -1,5 +1,6 @@
 package persistance;
 
+import model.Bank;
 import model.Creditors;
 import model.Inventory;
 import org.json.JSONObject;
@@ -13,13 +14,16 @@ public class JsonWriter {
     private static final int TAB = 4;
     private PrintWriter writer;
     private PrintWriter writer1;
+    private PrintWriter writer2;
     private String destination;
     private String destinationC;
+    private String destinationB;
 
     // EFFECTS: constructs writer to write to destination file
-    public JsonWriter(String destination,String destinationC) {
+    public JsonWriter(String destination,String destinationC, String destinationB) {
         this.destination = destination;
         this.destinationC = destinationC;
+        this.destinationB = destinationB;
     }
 
     // MODIFIES: this
@@ -28,15 +32,18 @@ public class JsonWriter {
     public void open() throws FileNotFoundException {
         writer = new PrintWriter(new File(destination));
         writer1 = new PrintWriter(new File(destinationC));
+        writer2 = new PrintWriter(new File(destinationB));
     }
 
     // MODIFIES: this
     // EFFECTS: writes JSON representation of Inventory to file
-    public void write(Inventory inventory,Creditors creditors) {
+    public void write(Inventory inventory, Creditors creditors, Bank bank) {
         JSONObject json = inventory.toJson();
         JSONObject json2 = creditors.toJson();
+        JSONObject json3 = bank.toJson();
         saveToFile(json.toString(TAB));
         saveToFileC(json2.toString(TAB));
+        saveToFileB(json3.toString(TAB));
     }
 
     // MODIFIES: this
@@ -44,6 +51,7 @@ public class JsonWriter {
     public void close() {
         writer.close();
         writer1.close();
+        writer2.close();
     }
 
     // MODIFIES: this
@@ -54,5 +62,9 @@ public class JsonWriter {
 
     private void saveToFileC(String json) {
         writer1.print(json);
+    }
+
+    private void saveToFileB(String json) {
+        writer2.print(json);
     }
 }

@@ -14,6 +14,7 @@ import java.util.Scanner;
 public class ShopManagement {
     private static final String JSON_STORE = "./data/inventory.json";
     private static final String JSON_STORE2 = "./data/creditors.json";
+    private static final String JSON_STORE3 = "./data/bank.json";
     private Creditors creditors;
     private Creditor creditor;
     private CashSales cashSales;
@@ -27,9 +28,6 @@ public class ShopManagement {
 
     // EFFECTS: runs the teller application
     public ShopManagement() throws FileNotFoundException {
-
-        jsonWriter = new JsonWriter(JSON_STORE,JSON_STORE2);
-        jsonReader = new JsonReader(JSON_STORE,JSON_STORE2);
         runShopManagement();
     }
 
@@ -73,11 +71,12 @@ public class ShopManagement {
                 manageTransaction();
                 break;
             case "s":
-                saveInventoryAndCreditors();
+                System.out.println("Please write the name of the shop owner ");
+                System.out.println("(Warning no duplicate names allowed)");
+                String selection2 = input.next();
+                save(selection2);
                 break;
-            case "l":
-                loadInventoryAndCreditors();
-                break;
+
             default:
                 System.out.println("Selection not valid...");
                 break;
@@ -87,6 +86,32 @@ public class ShopManagement {
     // MODIFIES: this
     // EFFECTS: initializes inventory, creditors and bank
     private void init() {
+        input = new Scanner(System.in);
+        input.useDelimiter("\n");
+        System.out.println("Do you want to load a previously saved file ");
+        System.out.println("\nSelect from:");
+        System.out.println("\ty -> yes");
+        System.out.println("\tn -> no");
+        String selection = input.next();
+        selection = selection.toLowerCase();
+
+        switch (selection) {
+            case "y":
+                System.out.println("please write the name of the shopkeeper");
+                String selection2 = input.next();
+                load(selection2);
+                break;
+            case "n":
+                init2();
+                break;
+            default:
+                System.out.println("Selection not valid...");
+                break;
+        }
+
+    }
+
+    private void init2() {
         input = new Scanner(System.in);
         double balance = 0;
         boolean validInput = false;
@@ -110,7 +135,6 @@ public class ShopManagement {
         input.useDelimiter("\n");
     }
 
-
     // EFFECTS: displays menu of options to user
     private void displayMenu() {
         System.out.println("\nSelect from:");
@@ -119,7 +143,6 @@ public class ShopManagement {
         System.out.println("\tc -> Manage creditors");
         System.out.println("\tt -> Perform a transaction");
         System.out.println("\ts -> save Inventory and creditors to file");
-        System.out.println("\tl -> load Inventory and creditors from file");
         System.out.println("\tq -> Quit");
     }
 
@@ -471,27 +494,30 @@ public class ShopManagement {
     }
 
     // EFFECTS: saves the workroom to file
-    private void saveInventoryAndCreditors() {
+    private void save(String name) {
         try {
+            jsonWriter = new JsonWriter("./data/inventory" + name + ".json","./data/creditors" + name + ".json","./data/bank" + name + ".json");
             jsonWriter.open();
-            jsonWriter.write(inventory,creditors);
+            jsonWriter.write(inventory,creditors,bank);
 
             jsonWriter.close();
-            System.out.println("Saved Inventory and Creditors to " + JSON_STORE);
+            System.out.println("Saved Shop Status file of " + name);
         } catch (FileNotFoundException e) {
-            System.out.println("Unable to write to file: " + JSON_STORE);
+            System.out.println("Unable to write to file of " + name);
         }
     }
 
     // MODIFIES: this
     // EFFECTS: loads workroom from file
-    private void loadInventoryAndCreditors() {
+    private void load(String name) {
         try {
+            jsonReader = new JsonReader("./data/inventory" + name + ".json","./data/creditors" + name + ".json","./data/bank" + name + ".json");
             inventory = jsonReader.read();
             creditors = jsonReader.readC();
-            System.out.println("Loaded Inventory and Creditors from " + JSON_STORE);
+            bank = jsonReader.readB();
+            System.out.println("Loaded Inventory and Creditors from " + name);
         } catch (IOException e) {
-            System.out.println("Unable to read from file: " + JSON_STORE);
+            System.out.println("Unable to read from file of " + name);
         }
     }
 

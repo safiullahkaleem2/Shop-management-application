@@ -1,10 +1,6 @@
 package persistance;
 
-
-import model.Creditor;
-import model.Creditors;
-import model.Item;
-import model.Inventory;
+import model.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -18,11 +14,13 @@ import java.util.stream.Stream;
 public class JsonReader {
     private String source;
     private String sourceC;
+    private String sourceB;
 
     // EFFECTS: constructs reader to read from source file
-    public JsonReader(String source,String sourceC) {
+    public JsonReader(String source,String sourceC,String sourceB) {
         this.source = source;
         this.sourceC = sourceC;
+        this.sourceB = sourceB;
 
     }
 
@@ -38,6 +36,12 @@ public class JsonReader {
         String jsonData = readFile(sourceC);
         JSONObject jsonObject = new JSONObject(jsonData);
         return parseCreditors(jsonObject);
+    }
+
+    public Bank readB() throws IOException {
+        String jsonData = readFile(sourceB);
+        JSONObject jsonObject = new JSONObject(jsonData);
+        return parseBank(jsonObject);
     }
 
     // EFFECTS: reads source file as string and returns it
@@ -56,6 +60,19 @@ public class JsonReader {
         Inventory inventory = Inventory.getInventory();
         addItems(inventory, jsonObject);
         return inventory;
+    }
+
+    // EFFECTS: parses Inventory from JSON object and returns it
+    private Bank parseBank(JSONObject jsonObject) {
+        Bank.getBank(0);
+        Bank bank = Bank.getBank();
+        Double balance = Double.parseDouble(jsonObject.getString("balance"));
+        Double payments = Double.parseDouble(jsonObject.getString("payments"));
+        Double receipts = Double.parseDouble(jsonObject.getString("receipts"));
+        bank.setBalance(balance);
+        bank.setPayments(payments);
+        bank.setReceipts(receipts);
+        return bank;
     }
 
     // EFFECTS: parses Inventory from JSON object and returns it

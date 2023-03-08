@@ -6,7 +6,10 @@ package model;
 //The receipts and payments fields hold the total amount of money received and paid out by the bank.
 
 
-public class Bank {
+import org.json.JSONObject;
+import persistance.Writable;
+
+public class Bank implements Writable {
     private double receipts;
     private double payments;
     private double balance;
@@ -57,6 +60,18 @@ public class Bank {
         return balance;
     }
 
+    public  void setBalance(double amount) {
+        this.balance = amount;
+    }
+
+    public  void setPayments(double amount) {
+        this.payments = amount;
+    }
+
+    public  void setReceipts(double amount) {
+        this.receipts = amount;
+    }
+
     // Effects: Returns the value of payments
     public double getPayments() {
         return payments;
@@ -65,5 +80,17 @@ public class Bank {
     // Effects: Returns the value of receipts.
     public double getReceipts() {
         return receipts;
+    }
+
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+
+        json.put("receipts", Double.toString(receipts));
+        json.put("payments", Double.toString(payments));
+        json.put("balance", Double.toString(balance));
+
+
+        return json;
     }
 }
