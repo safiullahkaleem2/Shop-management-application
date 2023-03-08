@@ -38,7 +38,7 @@ public class ShopManagement {
 
         while (keepGoing) {
             if (bank == null) {
-                init2();
+                init();
             } else {
                 displayMenu();
                 command = input.next();
@@ -89,7 +89,8 @@ public class ShopManagement {
     private void init() {
         input = new Scanner(System.in);
         input.useDelimiter("\n");
-        System.out.println("Do you want to load a previously saved file ");
+        System.out.println("Welcome Bank!");
+        System.out.println("Do you want to load a previously saved file?");
         System.out.println("\nSelect from:");
         System.out.println("\ty -> yes");
         System.out.println("\tn -> no");
@@ -103,6 +104,7 @@ public class ShopManagement {
                 load(selection2);
                 break;
             case "n":
+                init2();
                 break;
             default:
                 System.out.println("Selection not valid...");
