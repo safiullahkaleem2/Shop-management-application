@@ -1,5 +1,11 @@
 package model;
 
+//The Bank class represents a bank that holds a balance and keeps track of receipts and payments.
+//It is a singleton class, meaning there can only be one instance of it.
+//The balance field holds the amount of money currently in the bank.
+//The receipts and payments fields hold the total amount of money received and paid out by the bank.
+
+
 public class Bank {
     private double receipts;
     private double payments;

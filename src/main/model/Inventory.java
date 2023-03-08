@@ -9,6 +9,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+//The Inventory class appears to represent a collection of items with a fixed capacity. It includes methods to add and
+// remove items from the inventory, as well as to check if an item is present. The class also has a method to create a
+// new item and add it to the inventory, provided the bank balance is sufficient, and another method to return the
+// number of items in the inventory.
 
 public class Inventory implements Writable {
     private static Inventory inventory;

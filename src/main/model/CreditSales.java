@@ -1,6 +1,14 @@
 package model;
 
 import java.util.ArrayList;
+//The CreditSales class represents a system for managing sales and returns of items on credit. It contains two methods
+// for recording sales and credit returns. The sales method takes in an item name, creditor name, quantity, and price,
+// and if the item is found in the inventory with enough quantity, reduces the quantity of the item, adds the owed price
+// to the creditor, and prints a success message. The recordCreditReturn method takes in an item name, creditor name,
+// quantity, and price, and if the creditor is found in the creditors list, increases the quantity of the item,
+// subtracts the owed price from the creditor, and prints a success message. The class relies on the Creditors and
+// Inventory classes for managing creditors and inventory, respectively.
+
 
 public class CreditSales  {
     protected static ArrayList<Creditor> creditors;

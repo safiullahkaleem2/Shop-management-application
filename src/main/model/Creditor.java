@@ -1,5 +1,9 @@
 package model;
 
+// The Creditor class represents a creditor entity in a financial system. It has a name and an amount of money owed to
+// it. The class provides methods to add and subtract from the amount owed, record payment received, and get the name
+// and amount owed.
+
 public class Creditor  {
     private String name;
     private double owed;

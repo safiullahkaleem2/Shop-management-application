@@ -1,0 +1,14 @@
+{"items": [
+    {
+        "itemName": "item1",
+        "unit": "kgs",
+        "quantity": "4",
+        "threshold": "2"
+    },
+    {
+        "itemName": "item2",
+        "unit": "kgs",
+        "quantity": "50",
+        "threshold": "20"
+    }
+]}

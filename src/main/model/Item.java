@@ -2,9 +2,9 @@ package model;
 
 import org.json.JSONObject;
 import persistance.Writable;
-
-import java.util.Collections;
-import java.util.List;
+//This is a class definition for an Item object, which has properties such as itemName, quantity, unit, and threshold.
+// It provides methods to get and set these properties, as well as to modify the quantity of the item (increase or
+// decrease) and check if the quantity is below the threshold.
 
 public class Item implements Writable {
 

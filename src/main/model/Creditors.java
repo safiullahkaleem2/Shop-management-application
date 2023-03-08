@@ -1,6 +1,14 @@
 package model;
 
 import java.util.ArrayList;
+// The Creditors class represents a list of creditors. It contains methods for adding, removing, and retrieving
+// creditors from the list, as well as methods for getting the total amount owed by all creditors and the number of
+// creditors in the list. The class uses an ArrayList of Creditor objects to store the creditors. The addCreditors
+// method adds a new creditor to the list, and the removeCreditor method removes a creditor with a specified name. The
+// getCreditor method retrieves a creditor with a specified name, and returns null if the creditor is not found. The
+// creditorsGet method returns the creditor at a specified index. The creditorsLength method returns the number of
+// creditors in the list. The getTotalAmountOwed method returns the total amount owed by all creditors in the list.
+// The size method returns the number of creditors in the list.
 
 public class Creditors  {
 
