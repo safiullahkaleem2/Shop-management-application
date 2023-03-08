@@ -10,6 +10,9 @@ public class CreditSalesTest {
     private CreditSales creditSales;
     private Creditors creditors;
     private Inventory inventory;
+    private Creditor creditor3;
+    private Item item3;
+
 
     @BeforeEach
     public void setup() {
@@ -18,6 +21,7 @@ public class CreditSalesTest {
         inventory = Inventory.getInventory();
         Item item1 = new Item("item1", 10, "piece", 5);
         Item item2 = new Item("item2", 5, "piece", 10);
+
         inventory.addItem(item1);
         inventory.addItem(item2);
         inventory.giveItem("item1").getQuantity();
@@ -25,7 +29,19 @@ public class CreditSalesTest {
 
     @Test
     public void testSales() {
-        creditSales.sales("item1", "creditor1", 5, 10);
+        Item item3 = new Item("item3", 15, "piece", 10);   // Not enough Quantity
+        Creditor creditor3 = new Creditor("creditor3");
+        creditSales.sales("item3", "creditor3", 5, 10);
+        assertEquals(0, creditor3.getOwed());
+        assertEquals(15,item3.getQuantity());
+
+        inventory.addItem(item3);                           //  not enough quantity
+        creditSales.sales("item3", "creditor3", 20, 10);
+        assertEquals(0, creditor3.getOwed());
+        assertEquals(15,item3.getQuantity());
+
+
+        creditSales.sales("item1", "creditor1", 5, 10); // Sucessful sale
 
         assertEquals(1, creditors.size());
         Creditor creditor = creditors.getCreditor("creditor1");

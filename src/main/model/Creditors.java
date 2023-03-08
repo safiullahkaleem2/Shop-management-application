@@ -1,6 +1,12 @@
 package model;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import persistance.Writable;
+
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 // The Creditors class represents a list of creditors. It contains methods for adding, removing, and retrieving
 // creditors from the list, as well as methods for getting the total amount owed by all creditors and the number of
 // creditors in the list. The class uses an ArrayList of Creditor objects to store the creditors. The addCreditors
@@ -10,7 +16,7 @@ import java.util.ArrayList;
 // creditors in the list. The getTotalAmountOwed method returns the total amount owed by all creditors in the list.
 // The size method returns the number of creditors in the list.
 
-public class Creditors  {
+public class Creditors implements Writable {
 
     private static ArrayList<Creditor> creditors;
 
@@ -89,5 +95,28 @@ public class Creditors  {
     public int size() {
         return creditors.size();
     }
+
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("creditors", creditorsToJson());
+        return json;
+    }
+
+    // EFFECTS: returns items in Inventory as a JSON array
+    private JSONArray creditorsToJson() {
+        JSONArray jsonArray = new JSONArray();
+
+        for (Creditor c : creditors) {
+            jsonArray.put(c.toJson());
+        }
+
+        return jsonArray;
+    }
+
+    public List<Creditor> getCreditors() {
+        return Collections.unmodifiableList(creditors);
+    }
+
 
 }

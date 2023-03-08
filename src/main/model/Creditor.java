@@ -4,7 +4,10 @@ package model;
 // it. The class provides methods to add and subtract from the amount owed, record payment received, and get the name
 // and amount owed.
 
-public class Creditor  {
+import org.json.JSONObject;
+import persistance.Writable;
+
+public class Creditor implements Writable {
     private String name;
     private double owed;
 
@@ -79,4 +82,13 @@ public class Creditor  {
     }
 
 
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+
+        json.put("name", name);
+        json.put("owed", Double.toString(owed));
+
+        return json;
+    }
 }

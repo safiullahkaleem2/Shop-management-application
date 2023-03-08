@@ -13,6 +13,7 @@ import java.util.Scanner;
 
 public class ShopManagement {
     private static final String JSON_STORE = "./data/inventory.json";
+    private static final String JSON_STORE2 = "./data/creditors.json";
     private Creditors creditors;
     private Creditor creditor;
     private CashSales cashSales;
@@ -27,8 +28,8 @@ public class ShopManagement {
     // EFFECTS: runs the teller application
     public ShopManagement() throws FileNotFoundException {
 
-        jsonWriter = new JsonWriter(JSON_STORE);
-        jsonReader = new JsonReader(JSON_STORE);
+        jsonWriter = new JsonWriter(JSON_STORE,JSON_STORE2);
+        jsonReader = new JsonReader(JSON_STORE,JSON_STORE2);
         runShopManagement();
     }
 
@@ -72,10 +73,10 @@ public class ShopManagement {
                 manageTransaction();
                 break;
             case "s":
-                saveInventory();
+                saveInventoryAndCreditors();
                 break;
             case "l":
-                loadInventory();
+                loadInventoryAndCreditors();
                 break;
             default:
                 System.out.println("Selection not valid...");
@@ -117,8 +118,8 @@ public class ShopManagement {
         System.out.println("\ti -> Manage inventory");
         System.out.println("\tc -> Manage creditors");
         System.out.println("\tt -> Perform a transaction");
-        System.out.println("\ts -> save Inventory to file");
-        System.out.println("\tl -> load Inventory from file");
+        System.out.println("\ts -> save Inventory and creditors to file");
+        System.out.println("\tl -> load Inventory and creditors from file");
         System.out.println("\tq -> Quit");
     }
 
@@ -470,12 +471,13 @@ public class ShopManagement {
     }
 
     // EFFECTS: saves the workroom to file
-    private void saveInventory() {
+    private void saveInventoryAndCreditors() {
         try {
             jsonWriter.open();
-            jsonWriter.write(inventory);
+            jsonWriter.write(inventory,creditors);
+
             jsonWriter.close();
-            System.out.println("Saved Inventory to " + JSON_STORE);
+            System.out.println("Saved Inventory and Creditors to " + JSON_STORE);
         } catch (FileNotFoundException e) {
             System.out.println("Unable to write to file: " + JSON_STORE);
         }
@@ -483,10 +485,11 @@ public class ShopManagement {
 
     // MODIFIES: this
     // EFFECTS: loads workroom from file
-    private void loadInventory() {
+    private void loadInventoryAndCreditors() {
         try {
             inventory = jsonReader.read();
-            System.out.println("Loaded Inventory from " + JSON_STORE);
+            creditors = jsonReader.readC();
+            System.out.println("Loaded Inventory and Creditors from " + JSON_STORE);
         } catch (IOException e) {
             System.out.println("Unable to read from file: " + JSON_STORE);
         }

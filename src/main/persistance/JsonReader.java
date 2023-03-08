@@ -1,6 +1,8 @@
 package persistance;
 
 
+import model.Creditor;
+import model.Creditors;
 import model.Item;
 import model.Inventory;
 import org.json.JSONArray;
@@ -15,10 +17,13 @@ import java.util.stream.Stream;
 // Represents a reader that reads workroom from JSON data stored in file
 public class JsonReader {
     private String source;
+    private String sourceC;
 
     // EFFECTS: constructs reader to read from source file
-    public JsonReader(String source) {
+    public JsonReader(String source,String sourceC) {
         this.source = source;
+        this.sourceC = sourceC;
+
     }
 
     // EFFECTS: reads workroom from file and returns it;
@@ -27,6 +32,12 @@ public class JsonReader {
         String jsonData = readFile(source);
         JSONObject jsonObject = new JSONObject(jsonData);
         return parseInventory(jsonObject);
+    }
+
+    public Creditors readC() throws IOException {
+        String jsonData = readFile(sourceC);
+        JSONObject jsonObject = new JSONObject(jsonData);
+        return parseCreditors(jsonObject);
     }
 
     // EFFECTS: reads source file as string and returns it
@@ -45,6 +56,13 @@ public class JsonReader {
         Inventory inventory = Inventory.getInventory();
         addItems(inventory, jsonObject);
         return inventory;
+    }
+
+    // EFFECTS: parses Inventory from JSON object and returns it
+    private Creditors parseCreditors(JSONObject jsonObject) {
+        Creditors creditors = new Creditors();
+        addCreditors(creditors, jsonObject);
+        return creditors;
     }
 
     // MODIFIES: wr
@@ -67,5 +85,26 @@ public class JsonReader {
 
         Item item = new Item(itemName,quantity,unit, threshold);
         inventory.addItem(item);
+    }
+
+
+    // MODIFIES: wr
+    // EFFECTS: parses thingies from JSON object and adds them to workroom
+    private void addCreditors(Creditors creditors, JSONObject jsonObject) {
+        JSONArray jsonArray = jsonObject.getJSONArray("creditors");
+        for (Object json : jsonArray) {
+            JSONObject nextCreditor = (JSONObject) json;
+            addCreditor(creditors, nextCreditor);
+        }
+    }
+
+    // MODIFIES: wr
+    // EFFECTS: parses thingy from JSON object and adds it to workroom
+    private void addCreditor(Creditors creditors, JSONObject jsonObject) {
+        String name = jsonObject.getString("name");
+        Double owed = Double.parseDouble(jsonObject.getString("owed"));
+        Creditor creditor = new Creditor(name);
+        creditor.addOwed(owed);
+        creditors.addCreditors(creditor);
     }
 }

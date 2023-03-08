@@ -38,6 +38,7 @@ class InventoryTest {
         assertTrue(inventory.addItem(item3));
         assertTrue(inventory.addItem(item4));
         assertFalse(inventory.addItem(item5));
+        assertFalse(inventory.addItem(item));
 
     }
 
@@ -69,6 +70,7 @@ class InventoryTest {
         }
 
         assertEquals(49500,bank.getBalance());
+
     }
 
     @Test
