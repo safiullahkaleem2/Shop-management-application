@@ -1,6 +1,7 @@
 package model;
 //The CashSales class represents the sales and return transactions made using cash. It interacts with the Inventory and
 // Bank classes to complete the transactions.
+
 public class CashSales {
 
 
