@@ -10,7 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.stream.Stream;
 
-// Represents a reader that reads workroom from JSON data stored in file
+// Represents a reader that reads Shop Status from JSON data stored in file
 public class JsonReader {
     private String source;
     private String sourceC;
@@ -24,7 +24,7 @@ public class JsonReader {
 
     }
 
-    // EFFECTS: reads workroom from file and returns it;
+    // EFFECTS: reads Inventory from file and returns it;
     // throws IOException if an error occurs reading data from file
     public Inventory read() throws IOException {
         String jsonData = readFile(source);
@@ -32,11 +32,16 @@ public class JsonReader {
         return parseInventory(jsonObject);
     }
 
+    // EFFECTS: reads Creditors from file and returns it;
+    // throws IOException if an error occurs reading data from file
+
     public Creditors readC() throws IOException {
         String jsonData = readFile(sourceC);
         JSONObject jsonObject = new JSONObject(jsonData);
         return parseCreditors(jsonObject);
     }
+    // EFFECTS: reads Bank from file and returns it;
+    // throws IOException if an error occurs reading data from file
 
     public Bank readB() throws IOException {
         String jsonData = readFile(sourceB);
@@ -62,7 +67,7 @@ public class JsonReader {
         return inventory;
     }
 
-    // EFFECTS: parses Inventory from JSON object and returns it
+    // EFFECTS: parses Bank from JSON object and returns it
     private Bank parseBank(JSONObject jsonObject) {
         Bank.getBank(0);
         Bank bank = Bank.getBank();
@@ -75,15 +80,15 @@ public class JsonReader {
         return bank;
     }
 
-    // EFFECTS: parses Inventory from JSON object and returns it
+    // EFFECTS: parses Creditors from JSON object and returns it
     private Creditors parseCreditors(JSONObject jsonObject) {
         Creditors creditors = new Creditors();
         addCreditors(creditors, jsonObject);
         return creditors;
     }
 
-    // MODIFIES: wr
-    // EFFECTS: parses thingies from JSON object and adds them to workroom
+    // MODIFIES: inventory
+    // EFFECTS: parses items from JSON object and adds them to inventory
     private void addItems(Inventory inventory, JSONObject jsonObject) {
         JSONArray jsonArray = jsonObject.getJSONArray("items");
         for (Object json : jsonArray) {
@@ -92,8 +97,8 @@ public class JsonReader {
         }
     }
 
-    // MODIFIES: wr
-    // EFFECTS: parses thingy from JSON object and adds it to workroom
+    // MODIFIES: inventory
+    // EFFECTS: parses item from JSON object and adds it to inventory
     private void addItem(Inventory inventory, JSONObject jsonObject) {
         String itemName = jsonObject.getString("itemName");
         int quantity = Integer.parseInt(jsonObject.getString("quantity"));
@@ -105,8 +110,8 @@ public class JsonReader {
     }
 
 
-    // MODIFIES: wr
-    // EFFECTS: parses thingies from JSON object and adds them to workroom
+    // MODIFIES: creditors
+    // EFFECTS: parses creditor from JSON object and adds them to creditors
     private void addCreditors(Creditors creditors, JSONObject jsonObject) {
         JSONArray jsonArray = jsonObject.getJSONArray("creditors");
         for (Object json : jsonArray) {
@@ -115,8 +120,8 @@ public class JsonReader {
         }
     }
 
-    // MODIFIES: wr
-    // EFFECTS: parses thingy from JSON object and adds it to workroom
+    // MODIFIES: creditors
+    // EFFECTS: parses creditor from JSON object and adds it to creditors
     private void addCreditor(Creditors creditors, JSONObject jsonObject) {
         String name = jsonObject.getString("name");
         Double owed = Double.parseDouble(jsonObject.getString("owed"));

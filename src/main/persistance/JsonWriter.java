@@ -9,7 +9,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 
-// Represents a writer that writes JSON representation of Inventory to file
+// Represents a writer that writes JSON representation of the current status to file
 public class JsonWriter {
     private static final int TAB = 4;
     private PrintWriter writer;
@@ -36,7 +36,7 @@ public class JsonWriter {
     }
 
     // MODIFIES: this
-    // EFFECTS: writes JSON representation of Inventory to file
+    // EFFECTS: writes JSON representation of the whole status to file
     public void write(Inventory inventory, Creditors creditors, Bank bank) {
         JSONObject json = inventory.toJson();
         JSONObject json2 = creditors.toJson();
@@ -60,9 +60,17 @@ public class JsonWriter {
         writer.print(json);
     }
 
+
+    // MODIFIES: this
+    // EFFECTS: writes string to file
+
     private void saveToFileC(String json) {
         writer1.print(json);
     }
+
+
+    // MODIFIES: this
+    // EFFECTS: writes string to file
 
     private void saveToFileB(String json) {
         writer2.print(json);

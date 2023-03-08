@@ -1,6 +1,7 @@
 package ui;
 
 import java.io.FileNotFoundException;
+// this class runs Shopmanagement application
 
 public class Main {
     public static void main(String[] args) {

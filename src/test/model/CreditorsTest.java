@@ -1,6 +1,10 @@
 package model;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -94,6 +98,9 @@ public class CreditorsTest {
 
         assertEquals(creditor1, creditors.creditorsGet(0));
         assertEquals(creditor2, creditors.creditorsGet(1));
-
+        List<Creditor> testCreditors = new ArrayList<>();
+        testCreditors.add(creditor1);
+        testCreditors.add(creditor2);
+        assertEquals(testCreditors,creditors.getCreditors());
     }
 }
