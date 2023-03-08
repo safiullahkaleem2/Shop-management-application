@@ -72,4 +72,28 @@ public class CreditorsTest {
         creditors.removeCreditor("Safi");
         assertEquals(1, creditors.size());
     }
+
+    @Test
+    public void testLength() {
+        assertEquals(0, creditors.creditorsLength());
+
+        Creditors.addCreditors(creditor1);
+        assertEquals(1, creditors.creditorsLength());
+
+        Creditors.addCreditors(creditor2);
+        assertEquals(2, creditors.creditorsLength());
+
+        creditors.removeCreditor("Safi");
+        assertEquals(1, creditors.creditorsLength());
+    }
+
+    @Test
+    public void testGet() {
+        Creditors.addCreditors(creditor1);
+        Creditors.addCreditors(creditor2);
+
+        assertEquals(creditor1, creditors.creditorsGet(0));
+        assertEquals(creditor2, creditors.creditorsGet(1));
+
+    }
 }
