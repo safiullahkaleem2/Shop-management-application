@@ -23,7 +23,8 @@ class JsonWriterTest extends JsonTest {
             Creditors creditors = new Creditors();
             Bank.getBank(0);
             Bank bank = Bank.getBank();
-            JsonWriter writer = new JsonWriter("./data/my\0illegal:fileName.json","./data/my\0illllegal:fileName.json","./data/my\0illlegal:fileName.json");
+            JsonWriter writer = new JsonWriter("./data/my\0illegal:fileName.json",
+                    "./data/my\0illllegal:fileName.json","./data/my\0illlegal:fileName.json");
             writer.open();
             fail("IOException was expected");
         } catch (IOException e) {
@@ -38,12 +39,14 @@ class JsonWriterTest extends JsonTest {
             Bank.getBank(0);
             Bank bank = Bank.getBank();
             Creditors creditors = new Creditors();
-            JsonWriter writer = new JsonWriter("./data/testWriterEmptyInventory.json","./data/testWriterEmptyCreditors.json","./data/testWriterEmptyBank.json");
+            JsonWriter writer = new JsonWriter("./data/testWriterEmptyInventory.json",
+                    "./data/testWriterEmptyCreditors.json","./data/testWriterEmptyBank.json");
             writer.open();
             writer.write(inventory,creditors,bank);
             writer.close();
 
-            JsonReader reader = new JsonReader("./data/testWriterEmptyInventory.json","./data/testWriterEmptyCreditors.json","./data/testWriterEmptyBank.json");
+            JsonReader reader = new JsonReader("./data/testWriterEmptyInventory.json",
+                    "./data/testWriterEmptyCreditors.json","./data/testWriterEmptyBank.json");
             inventory = reader.read();
             creditors = reader.readC();
             bank = reader.readB();
@@ -71,12 +74,14 @@ class JsonWriterTest extends JsonTest {
             Creditors.addCreditors(creditor);
             inventory.addItem(new Item("item1", 4,"kgs",2));
             inventory.addItem(new Item("item3", 50 ,"kgs",20));
-            JsonWriter writer = new JsonWriter("./data/InventoryWriter.json","./data/CreditorsWriter.json","./data/BankWriter.json");
+            JsonWriter writer = new JsonWriter("./data/InventoryWriter.json",
+                    "./data/CreditorsWriter.json","./data/BankWriter.json");
             writer.open();
             writer.write(inventory,creditors,bank);
             writer.close();
 
-            JsonReader reader = new JsonReader("./data/InventoryWriter.json","./data/CreditorsWriter.json","./data/BankWriter.json");
+            JsonReader reader = new JsonReader("./data/InventoryWriter.json",
+                    "./data/CreditorsWriter.json","./data/BankWriter.json");
             inventory = reader.read();
             creditors = reader.readC();
             bank = reader.readB();

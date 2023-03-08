@@ -14,7 +14,8 @@ class JsonReaderTest extends JsonTest {
 
     @Test
     void testReaderNonExistentFile() {
-        JsonReader reader = new JsonReader("./data/noSuchFile.json","./data/noSuchFile.json","./data/noSuchFile.json");
+        JsonReader reader = new JsonReader("./data/noSuchFile.json",
+                "./data/noSuchFile.json","./data/noSuchFile.json");
         try {
             Inventory inventory = reader.read();
             fail("IOException expected");
@@ -25,7 +26,8 @@ class JsonReaderTest extends JsonTest {
 
     @Test
     void testReaderEmptyWorkRoom() {
-        JsonReader reader = new JsonReader("./data/testReaderEmptyInventory.json","./data/testReaderEmptyCreditors.json","./data/testReaderEmptyBank.json");
+        JsonReader reader = new JsonReader("./data/testReaderEmptyInventory.json",
+                "./data/testReaderEmptyCreditors.json","./data/testReaderEmptyBank.json");
         try {
             Inventory inventory = reader.read();
             Creditors creditors = reader.readC();
@@ -42,7 +44,8 @@ class JsonReaderTest extends JsonTest {
 
     @Test
     void testReaderGeneralWorkRoom() {
-        JsonReader reader = new JsonReader("./data/InventoryReader.json","./data/CreditorsReader.json","./data/BankReader.json");
+        JsonReader reader = new JsonReader("./data/InventoryReader.json",
+                "./data/CreditorsReader.json","./data/BankReader.json");
         try {
             Inventory inventory = reader.read();
 

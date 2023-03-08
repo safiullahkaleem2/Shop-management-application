@@ -496,7 +496,8 @@ public class ShopManagement {
     // EFFECTS: saves the workroom to file
     private void save(String name) {
         try {
-            jsonWriter = new JsonWriter("./data/inventory" + name + ".json","./data/creditors" + name + ".json","./data/bank" + name + ".json");
+            jsonWriter = new JsonWriter("./data/inventory" + name + ".json",
+                    "./data/creditors" + name + ".json","./data/bank" + name + ".json");
             jsonWriter.open();
             jsonWriter.write(inventory,creditors,bank);
 
@@ -511,7 +512,8 @@ public class ShopManagement {
     // EFFECTS: loads workroom from file
     private void load(String name) {
         try {
-            jsonReader = new JsonReader("./data/inventory" + name + ".json","./data/creditors" + name + ".json","./data/bank" + name + ".json");
+            jsonReader = new JsonReader("./data/inventory" + name + ".json",
+                    "./data/creditors" + name + ".json","./data/bank" + name + ".json");
             inventory = jsonReader.read();
             creditors = jsonReader.readC();
             bank = jsonReader.readB();
