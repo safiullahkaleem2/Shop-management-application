@@ -1,9 +1,7 @@
 package model;
-
-
 import model.exceptions.InsufficientBalanceException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class InventoryTest {
@@ -13,18 +11,20 @@ class InventoryTest {
     private Item item3;
     private Item item4;
     private Item item5;
-
     private Bank bank;
 
 
     public InventoryTest() {
+
+    }
+    @BeforeEach
+    void runBefore(){
         inventory = Inventory.getInventory();
         item = new Item("item1", 10, "unit1", 5);
         item2 = new Item("item2", 10, "unit1", 5);
         item3 = new Item("item3", 10, "unit1", 5);
         item4 = new Item("item4", 10, "unit1", 5);
         item5 = new Item("item5", 10, "unit1", 5);
-
         Bank.getBank(50000);
         bank = Bank.getBank();
 
@@ -34,12 +34,10 @@ class InventoryTest {
     void addItemTest() {
         assertTrue(inventory.addItem(item));
         assertFalse(inventory.addItem(item));
-
         assertTrue(inventory.addItem(item3));
         assertTrue(inventory.addItem(item4));
         assertFalse(inventory.addItem(item5));
         assertFalse(inventory.addItem(item));
-
     }
 
     @Test
@@ -47,7 +45,7 @@ class InventoryTest {
         inventory.addItem(item);
         inventory.addItem(item3);
         assertTrue(inventory.removeItem("item1"));
-        assertFalse(inventory.removeItem("item2"));
+        assertFalse(inventory.removeItem("item2"));  //false case
         assertFalse(inventory.removeItem("F"));
         assertTrue(inventory.removeItem("item3"));
     }
@@ -56,6 +54,7 @@ class InventoryTest {
     void boughtNewItemTest() {
         try {
             assertTrue(inventory.boughtNewItem("item2", 5, "unit2", 10, 500));
+
         } catch (InsufficientBalanceException e) {
             fail("Unexpected insufficient balance Exception");
         }
