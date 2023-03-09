@@ -1,8 +1,9 @@
 package model;
-import model.exceptions.InsufficientBalanceException;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class InventoryTest {
@@ -65,25 +66,11 @@ public class InventoryTest {
 
     @Test
     void boughtItemTest() {
-        try {
             assertTrue(inventory.boughtNewItem("item2", 5, "unit2", 10, 500));
             assertEquals(49500,bank.getBalance());
             assertEquals(item2.getItemName(),inventory.get(0).getItemName());
 
-        } catch (InsufficientBalanceException e) {
-            fail("Unexpected insufficient balance Exception");
-        }
 
-
-        assertEquals(49500,bank.getBalance());
-        try {
-            assertTrue(inventory.boughtNewItem("item2", 5, "unit2", 10, 5000000));
-            fail("Unexpected insufficient balance Exception");
-        } catch (InsufficientBalanceException e) {
-           // expected exception
-        }
-
-        assertEquals(49500,bank.getBalance());
 
     }
 

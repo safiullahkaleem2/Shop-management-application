@@ -1,7 +1,6 @@
 package ui;
 
 import model.*;
-import model.exceptions.InsufficientBalanceException;
 import persistance.JsonReader;
 import persistance.JsonWriter;
 
@@ -224,13 +223,13 @@ public class ShopManagement {
         System.out.print("Enter price: ");
         double price = input.nextDouble();
 
-        try {
-            if (inventory.boughtNewItem(name, quantity, unit, threshold, price)) {
-                System.out.println("Item added successfully");
-            }
-        } catch (InsufficientBalanceException e) {
-            System.out.println("Unable to add item to inventory. Insufficient balance.");
+        if (price > bank.getBalance()) {
+            System.out.println("You dont have enough balance in your account");
+        } else {
+            inventory.boughtNewItem(name, quantity, unit, threshold, price);
+            System.out.println("Item added successfully");
         }
+
     }
 
     // MODIFIES: this

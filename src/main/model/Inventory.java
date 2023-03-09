@@ -1,6 +1,5 @@
 package model;
 
-import model.exceptions.InsufficientBalanceException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import persistance.Writable;
@@ -68,17 +67,13 @@ public class Inventory implements Writable {
     // effects: create a new item with the given name, quantity, unit and threshold;
     // if the price is less than or equal to the balance in Bank, subtract the price from Bank balance,
     // add the item to inventory and return true, otherwise throw an InsufficientBalanceException and return false
-    public boolean boughtNewItem(String name, int quantity, String unit, int threshold, double price)
-            throws InsufficientBalanceException {
+    public boolean boughtNewItem(String name, int quantity, String unit, int threshold, double price) {
         Bank bank = Bank.getBank();
-        if (bank.getBalance() < price) {
-            throw new InsufficientBalanceException();
-        } else {
-            bank.subtractBalance(price);
-            Item item = new Item(name, quantity, unit, threshold);
-            boolean added = addItem(item); // add the new item to the inventory
-            return added;
-        }
+        bank.subtractBalance(price);
+        Item item = new Item(name, quantity, unit, threshold);
+        boolean added = addItem(item); // add the new item to the inventory
+        return added;
+
     }
 
     // requires: name is not null
