@@ -67,6 +67,8 @@ public class InventoryTest {
     void boughtNewItemTest() {
         try {
             assertTrue(inventory.boughtNewItem("item2", 5, "unit2", 10, 500));
+            assertEquals(49500,bank.getBalance());
+            assertEquals(item2.getItemName(),inventory.get(0).getItemName());
 
         } catch (InsufficientBalanceException e) {
             fail("Unexpected insufficient balance Exception");
