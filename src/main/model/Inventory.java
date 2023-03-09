@@ -50,7 +50,7 @@ public class Inventory implements Writable {
     public boolean removeItem(String name) {
         for (int n = 0;n < inventory.items.size(); n = n + 1) {
             Item item = inventory.items.get(n);
-            if (name == (item.getItemName())) {
+            if (name.equals(item.getItemName())) {
                 inventory.items.remove(n);
                 System.out.println("Item removed successfully");
                 return true;
@@ -76,7 +76,8 @@ public class Inventory implements Writable {
         } else {
             bank.subtractBalance(price);
             Item item = new Item(name, quantity, unit, threshold);
-            return inventory.items.add(item);
+            boolean added = addItem(item); // add the new item to the inventory
+            return added;
         }
     }
 

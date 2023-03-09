@@ -64,7 +64,7 @@ public class InventoryTest {
     }
 
     @Test
-    void boughtNewItemTest() {
+    void boughtItemTest() {
         try {
             assertTrue(inventory.boughtNewItem("item2", 5, "unit2", 10, 500));
             assertEquals(49500,bank.getBalance());
