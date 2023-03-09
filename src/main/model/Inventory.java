@@ -50,7 +50,7 @@ public class Inventory implements Writable {
     public boolean removeItem(String name) {
         for (int n = 0;n < inventory.items.size(); n = n + 1) {
             Item item = inventory.items.get(n);
-            if (name.equals(item.getItemName())) {
+            if (name == (item.getItemName())) {
                 inventory.items.remove(n);
                 System.out.println("Item removed successfully");
                 return true;
