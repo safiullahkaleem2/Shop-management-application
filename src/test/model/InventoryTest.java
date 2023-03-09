@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-class InventoryTest {
+public class InventoryTest {
     private Inventory inventory;
     private Item item;
     private Item item2;
@@ -15,7 +15,6 @@ class InventoryTest {
 
 
     public InventoryTest() {
-
     }
     @BeforeEach
     void runBefore(){

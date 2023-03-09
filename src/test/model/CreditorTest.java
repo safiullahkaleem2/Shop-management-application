@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class CreditorTest {
+public class CreditorTest {
     private Creditor creditor;
     private Creditor creditor2;
     private Bank bank;
