@@ -33,6 +33,13 @@ public class InventoryTest {
     @AfterEach
     void after(){
         inventory.getInventoryItems().clear();
+        bank = null;
+        item = null;
+        item3 = null;
+        item2 = null;
+        item4 = null;
+        item5 = null;
+
     }
 
     @Test
