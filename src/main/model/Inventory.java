@@ -137,4 +137,8 @@ public class Inventory implements Writable {
     public List<Item> getItems() {
         return Collections.unmodifiableList(this.items);
     }
+
+    public List<Item> getInventoryItems() {
+        return this.items;
+    }
 }

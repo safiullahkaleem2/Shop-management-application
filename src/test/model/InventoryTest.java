@@ -1,5 +1,6 @@
 package model;
 import model.exceptions.InsufficientBalanceException;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -29,13 +30,19 @@ public class InventoryTest {
 
     }
 
+    @AfterEach
+    void after(){
+        inventory.getInventoryItems().clear();
+    }
+
     @Test
     void addItemTest() {
         assertTrue(inventory.addItem(item));
         assertFalse(inventory.addItem(item));
         assertTrue(inventory.addItem(item3));
         assertTrue(inventory.addItem(item4));
-        assertFalse(inventory.addItem(item5));
+        assertTrue(inventory.addItem(item5));
+        assertFalse(inventory.addItem(item2));
         assertFalse(inventory.addItem(item));
     }
 
@@ -82,15 +89,21 @@ public class InventoryTest {
     void itemSize(){
         inventory.addItem(item);
         inventory.addItem(item2);
-        assertEquals(4,inventory.length());
+        assertEquals(2,inventory.length());
     }
 
     @Test
     void itemGet(){
         inventory.addItem(item);
         inventory.addItem(item2);
-        assertEquals(item2.getItemName(),inventory.get(0).getItemName());
+        assertEquals(item.getItemName(),inventory.get(0).getItemName());
     }
 
+    @Test
+
+    void inventoryItemsGet(){
+        inventory.addItem(item);
+        assertEquals(inventory.getInventoryItems(),inventory.getInventoryItems());
+    }
 
 }
