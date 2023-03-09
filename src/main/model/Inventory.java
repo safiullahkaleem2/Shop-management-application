@@ -70,10 +70,11 @@ public class Inventory implements Writable {
     // add the item to inventory and return true, otherwise throw an InsufficientBalanceException and return false
     public boolean boughtNewItem(String name, int quantity, String unit, int threshold, double price)
             throws InsufficientBalanceException {
-        if (Bank.getBank().getBalance() < price) {
+        Bank bank = Bank.getBank();
+        if (bank.getBalance() < price) {
             throw new InsufficientBalanceException();
         } else {
-            Bank.getBank().subtractBalance(price);
+            bank.subtractBalance(price);
             Item item = new Item(name, quantity, unit, threshold);
             return inventory.items.add(item);
         }
