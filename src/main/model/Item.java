@@ -2,6 +2,8 @@ package model;
 
 import org.json.JSONObject;
 import persistance.Writable;
+
+import java.util.Objects;
 //This is a class definition for an Item object, which has properties such as itemName, quantity, unit, and threshold.
 // It provides methods to get and set these properties, as well as to modify the quantity of the item (increase or
 // decrease) and check if the quantity is below the threshold.
@@ -14,6 +16,22 @@ public class Item implements Writable {
 
     private int threshold;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Item item = (Item) o;
+        return itemName.equals(item.itemName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(itemName);
+    }
 
     // Requires: Non-null String values for itemName and unit, and non-negative int value for threshold.
     // Effects: Creates a new Item object with the given values for itemName, quantity, unit, and threshold.

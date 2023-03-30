@@ -27,12 +27,14 @@ public class CreditSales  {
         if (null == Creditors.getCreditor(creditorName)) {
             creditor = new Creditor(creditorName);
             Creditors.addCreditors(creditor);
-
+            item.reduceQuantity(quantity);
+            creditor.addOwed(price);
         } else {
-            creditor = Creditors.getCreditor(creditorName);
+            Creditor creditor1 = Creditors.getCreditor(creditorName);
+            item.reduceQuantity(quantity);
+            creditor1.addOwed(price);
         }
-        item.reduceQuantity(quantity);
-        creditor.addOwed(price);
+
 
     }
 
