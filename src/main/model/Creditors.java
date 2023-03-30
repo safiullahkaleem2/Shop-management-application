@@ -66,9 +66,9 @@ public class Creditors implements Writable {
     // Modifies: None
     // Effects: Returns the creditor with the specified name, or null if the creditor is not found
     public static Creditor getCreditor(String name) {
-        for (Creditor creditor : creditors) {
-            if (name.equals(creditor.getName())) {
-                return creditor;
+        for (Creditor creditor1 : creditors) {
+            if (name.equals(creditor1.getName())) {
+                return creditor1;
             }
         }
 

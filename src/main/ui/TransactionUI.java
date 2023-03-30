@@ -1,9 +1,6 @@
 package ui;
 
-import model.CashSales;
-import model.CreditSales;
-import model.Creditors;
-import model.Inventory;
+import model.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -557,10 +554,19 @@ public class TransactionUI {
                     "Invalid Quantity");
         } else {
             CreditSales creditSales = new CreditSales();
-            creditSales.sales(name, customerName, quantity, price);
-            JOptionPane.showMessageDialog(creditTransactionFrame,"Transaction confirmed");
-            creditTransactionFrame.dispose();
+            if (null == Creditors.getCreditor(customerName)) {
+                Creditor creditor = new Creditor(customerName);
+                Creditors.addCreditors(creditor);
+            }
+            performCreditSales(creditTransactionFrame, name, customerName, quantity, price, creditSales);
         }
+    }
+
+    private void performCreditSales(JFrame creditTransactionFrame, String name, String customerName, int quantity,
+                                    double price, CreditSales creditSales) {
+        creditSales.sales(name, customerName, quantity, price);
+        JOptionPane.showMessageDialog(creditTransactionFrame,"Transaction confirmed");
+        creditTransactionFrame.dispose();
     }
 
 
