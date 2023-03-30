@@ -59,6 +59,11 @@ public class CreditSalesTest {
         Creditor creditor = creditors.getCreditor("creditor1");
         assertEquals(10, creditor.getOwed());
         assertEquals(5, inventory.giveItem("item1").getQuantity());
+        Creditor creditor2 = new Creditor("safi");
+        creditSales.sales("item1", "safi", 1, 10);
+
+        assertEquals(4, inventory.giveItem("item1").getQuantity());
+
     }
 
     @Test
