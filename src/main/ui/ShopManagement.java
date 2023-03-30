@@ -106,7 +106,8 @@ public class ShopManagement {
         button1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 frame.setVisible(false);
-                manageInventory();
+                InventoryUI inventoryUI = new InventoryUI(frame);
+                inventoryUI.manageInventory();
             }
         });
         button2.addActionListener(new ActionListener() {

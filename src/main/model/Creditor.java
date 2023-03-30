@@ -7,8 +7,6 @@ package model;
 import org.json.JSONObject;
 import persistance.Writable;
 
-import java.util.Objects;
-
 public class Creditor implements Writable {
     private String name;
     private double owed;
@@ -30,24 +28,8 @@ public class Creditor implements Writable {
         owed = owed + amount;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Creditor creditor = (Creditor) o;
-        return name.equals(creditor.name);
-    }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(name);
-    }
-
-    // Requires: N/A
+     // Requires: N/A
      // Modifies: owed, paymentDays
      // Effects: Decreases the amount owed by the given amount.
      //

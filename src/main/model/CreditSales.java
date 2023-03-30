@@ -22,17 +22,18 @@ public class CreditSales  {
      //
 
     public void sales(String itemName, String creditorName, int quantity, double price) {
-        Creditor creditor;
+
         Item item = Inventory.getInventory().giveItem(itemName);
         if (null == Creditors.getCreditor(creditorName)) {
-            creditor = new Creditor(creditorName);
+            Creditor creditor = new Creditor(creditorName);
             Creditors.addCreditors(creditor);
             item.reduceQuantity(quantity);
             creditor.addOwed(price);
+
         } else {
-            Creditor creditor1 = Creditors.getCreditor(creditorName);
+            Creditor creditor = Creditors.getCreditor(creditorName);
             item.reduceQuantity(quantity);
-            creditor1.addOwed(price);
+            creditor.addOwed(price);
         }
 
 
