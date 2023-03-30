@@ -13,6 +13,7 @@ public class InventoryTest {
     private Item item3;
     private Item item4;
     private Item item5;
+
     private Bank bank;
 
 
@@ -43,6 +44,10 @@ public class InventoryTest {
 
     }
 
+    @Test
+    void giveItemTest(){
+        assertEquals(null,inventory.giveItem("lora"));
+    }
     @Test
     void addItemTest() {
         assertTrue(inventory.addItem(item));

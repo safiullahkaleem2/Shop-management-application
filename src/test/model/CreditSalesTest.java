@@ -28,13 +28,13 @@ public class CreditSalesTest {
         inventory.addItem(item1);
         inventory.addItem(item2);
         inventory.giveItem("item1").getQuantity();
-
+        creditor3 = new Creditor("safi");
     }
 
     @AfterEach
     void after(){
         inventory.getInventoryItems().clear();
-
+        creditors = null;
         item1 = null;
         item3 = null;
         item2 = null;
@@ -59,9 +59,9 @@ public class CreditSalesTest {
         Creditor creditor = creditors.getCreditor("creditor1");
         assertEquals(10, creditor.getOwed());
         assertEquals(5, inventory.giveItem("item1").getQuantity());
-        Creditor creditor2 = new Creditor("safi");
-        creditSales.sales("item1", "safi", 1, 10);
 
+        creditSales.sales("item1", "safi", 1, 10);
+        assertEquals(0, creditor3.getOwed());
         assertEquals(4, inventory.giveItem("item1").getQuantity());
 
     }
