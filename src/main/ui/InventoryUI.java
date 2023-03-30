@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 
 import static java.lang.Double.parseDouble;
 import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
+// This class is Inventory UI class
 
 public class InventoryUI {
     private JFrame frame;
@@ -24,6 +25,7 @@ public class InventoryUI {
         bank = Bank.getBank();
     }
 
+    //Effects:- manages Inventory
     public void manageInventory() {
         JLabel inventoryLabel = new JLabel("Inventory Menu");
         JButton addItemButton = new JButton("Add Item to Inventory");

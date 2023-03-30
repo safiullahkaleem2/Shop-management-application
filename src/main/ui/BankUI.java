@@ -7,6 +7,7 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.data.category.DefaultCategoryDataset;
 
 import javax.swing.*;
+// This class is Bank UI class
 
 public class BankUI {
     private Bank bank;

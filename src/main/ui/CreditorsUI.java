@@ -18,6 +18,7 @@ public class CreditorsUI {
     private JButton button5;
     private Creditors creditors;
     private JFrame frame;
+// This class is Creditors UI class
 
     public CreditorsUI(JButton button, JButton button1, JButton button2, JButton button3, JButton button4,
                        JButton button5,Creditors creditors,JFrame frame) {
