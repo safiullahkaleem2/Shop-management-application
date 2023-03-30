@@ -15,8 +15,6 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.InputMismatchException;
-import java.util.Scanner;
 
 import static java.lang.Double.parseDouble;
 import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
@@ -29,14 +27,13 @@ public class ShopManagement {
     private final JButton button4;
     private final JButton button5;
     private Creditors creditors;
-    private Creditor creditor;
-    private CashSales cashSales;
-    private CreditSales creditSales;
+
+
     private Bank bank;
     private Inventory inventory;
     private JsonWriter jsonWriter;
     private JsonReader jsonReader;
-    private Scanner input;
+
     private JFrame frame;
     private JButton button;
 
@@ -46,7 +43,8 @@ public class ShopManagement {
         frame = new JFrame("Shop Management System");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(700, 800);
-
+        inventory = Inventory.getInventory();
+        creditors = new Creditors();
         // create the buttons
         button = new JButton("Check Bank details");
         button1 = new JButton("Manage Inventory");
@@ -59,9 +57,7 @@ public class ShopManagement {
         // create a panel to hold the buttons
         JPanel buttonPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.insets = new Insets(10, 10, 10, 10);
+        gbcHelper(gbc);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         // add the buttons to the panel
@@ -81,7 +77,7 @@ public class ShopManagement {
         frame.getContentPane().setLayout(new BorderLayout());
         frame.getContentPane().add(buttonPanel, BorderLayout.CENTER);
 
-        initializeNewShop();
+
         // add an action listener to the buttons
         button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -96,27 +92,55 @@ public class ShopManagement {
         });
         button2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                frame.setVisible(false);
                 manageCreditors();
             }
         });
         button3.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                frame.setVisible(false);
                 manageTransaction();
             }
         });
         button4.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                String input = JOptionPane.showInputDialog(null, "Please enter your name:",
+                        "Input", JOptionPane.PLAIN_MESSAGE);
+                if (input != null) {
+                    save(input);
+                }
+
 
             }
         });
         button5.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-
+                System.exit(0);
             }
         });
 
         // show the frame
         frame.setVisible(true);
+        initializer();
+
+    }
+
+    private void initializer() {
+        int result = JOptionPane.showConfirmDialog(null, "Do you want to load a previously Saved"
+                + " file?", "   Load", JOptionPane.YES_NO_OPTION);
+        if (result == JOptionPane.YES_OPTION) {
+            String input = JOptionPane.showInputDialog(null,
+                    "Please enter your name:", "Input", JOptionPane.PLAIN_MESSAGE);
+            if (input != null) {
+                load(input);
+            } else {
+                initializeNewShop();
+            }
+
+
+        } else {
+            initializeNewShop();
+        }
 
     }
 
@@ -132,9 +156,9 @@ public class ShopManagement {
                 if (balance >= 0) {
                     validInput = true;
                 } else {
-                    JOptionPane.showMessageDialog(null,
+                    conditionalCheckerRefactor(null,
                             "Invalid balance. Please enter a positive value.",
-                            "Invalid Balance", JOptionPane.ERROR_MESSAGE);
+                            "Invalid Balance");
                 }
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(null,
@@ -150,128 +174,12 @@ public class ShopManagement {
     }
 
     // MODIFIES: this
-    // EFFECTS: processes user input
-    private void runShopManagement() {
-        boolean keepGoing = true;
-        String command;
-
-        init();
-
-        while (keepGoing) {
-            if (bank == null) {
-                init();
-            } else {
-                displayMenu();
-                command = input.next();
-                command = command.toLowerCase();
-
-                if (command.equals("q")) {
-                    keepGoing = false;
-                } else {
-                    processCommand(command);
-                }
-            }
-        }
-
-        System.out.println("\nGoodbye!");
-    }
-
-    // MODIFIES: this
-    // EFFECTS: processes user command
-    private void processCommand(String command) {
-        switch (command) {
-            case "b":
-                checkBank();
-                break;
-            case "i":
-                manageInventory();
-                break;
-            case "c":
-                manageCreditors();
-                break;
-            case "t":
-                manageTransaction();
-                break;
-            case "s":
-                System.out.println("Please write the name of the shop owner ");
-                System.out.println("(Warning no duplicate names allowed)");
-                String selection2 = input.next();
-                save(selection2);
-                break;
-
-            default:
-                System.out.println("Selection not valid...");
-                break;
-        }
-    }
-
-    // MODIFIES: this
-    // EFFECTS: initializes inventory, creditors and bank
-    private void init() {
-        input = new Scanner(System.in);
-        input.useDelimiter("\n");
-        System.out.println("Welcome Bank!");
-        System.out.println("Do you want to load a previously saved file?");
-        System.out.println("\nSelect from:");
-        System.out.println("\ty -> yes");
-        System.out.println("\tn -> no");
-        String selection = input.next();
-        selection = selection.toLowerCase();
-
-        switch (selection) {
-            case "y":
-                System.out.println("please write the name of the shopkeeper");
-                String selection2 = input.next();
-                load(selection2);
-                break;
-            case "n":
-                init2();
-                break;
-            default:
-                System.out.println("Selection not valid...");
-                break;
-        }
-
-    }
-
-    private void init2() {
-        input = new Scanner(System.in);
-        double balance = 0;
-        boolean validInput = false;
-
-        while (!validInput) {
-            try {
-                System.out.println("Enter initial bank balance: ");
-                balance = input.nextDouble();
-                validInput = true;
-            } catch (InputMismatchException e) {
-                System.out.println("Invalid input, please enter a number.");
-                input.next();
-            }
-        }
-
-        Bank.getBank(balance);
-        bank = Bank.getBank();
-        inventory = Inventory.getInventory();
-        creditors = new Creditors();
-        input = new Scanner(System.in);
-        input.useDelimiter("\n");
-    }
-
-    // EFFECTS: displays menu of options to user
-    private void displayMenu() {
-        System.out.println("\nSelect from:");
-        System.out.println("\tb -> Check bank details");
-        System.out.println("\ti -> Manage inventory");
-        System.out.println("\tc -> Manage creditors");
-        System.out.println("\tt -> Perform a transaction");
-        System.out.println("\ts -> save Inventory and creditors to file");
-        System.out.println("\tq -> Quit");
-    }
-
-    // MODIFIES: this
     // EFFECTS: directs to checking bank details
     private void checkBank() {
+        if (Bank.getBank() == null) {
+            Bank.getBank(0);
+            bank = Bank.getBank();
+        }
         JFrame barChartFrame = new JFrame("Bank Details");
 
         DefaultCategoryDataset bankData = new DefaultCategoryDataset();
@@ -293,7 +201,7 @@ public class ShopManagement {
 
     }
 
-    @SuppressWarnings("methodlength")
+
     // MODIFIES: this
     // EFFECTS: directs to changing inventory details
     private void manageInventory() {
@@ -311,9 +219,7 @@ public class ShopManagement {
         inventoryFrame.setSize(700, 800);
         JPanel inventoryButtonPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.insets = new Insets(10, 10, 10, 10);
+        gbcHelper(gbc);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         gridBuildingHelper(inventoryLabel, addItemButton, removeItemButton, thresholdCheckButton, viewInventoryButton,
@@ -327,6 +233,31 @@ public class ShopManagement {
 
 
         // add an action listener to the add item button
+        actionListenerHelper(addItemButton, removeItemButton, thresholdCheckButton, viewInventoryButton);
+
+
+        // add an action listener to the quit button
+        quitButtonHelper(quitButton, inventoryFrame);
+
+        // add the inventory panel to the frame
+        inventoryFrame.getContentPane().add(inventoryButtonPanel);
+
+        // show the inventory frame
+        inventoryFrame.setVisible(true);
+    }
+
+    private void quitButtonHelper(JButton quitButton, JFrame inventoryFrame) {
+        quitButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                inventoryFrame.dispose();
+                frame.setVisible(true);
+
+            }
+        });
+    }
+
+    private void actionListenerHelper(JButton addItemButton, JButton removeItemButton, JButton thresholdCheckButton,
+                                      JButton viewInventoryButton) {
         addItemButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 addItemsToInventory();
@@ -355,22 +286,6 @@ public class ShopManagement {
                 allInventoryItems();
             }
         });
-
-
-        // add an action listener to the quit button
-        quitButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                inventoryFrame.dispose();
-                frame.setVisible(true);
-
-            }
-        });
-
-        // add the inventory panel to the frame
-        inventoryFrame.getContentPane().add(inventoryButtonPanel);
-
-        // show the inventory frame
-        inventoryFrame.setVisible(true);
     }
 
     private void gridBuildingHelper(JLabel inventoryLabel, JButton addItemButton, JButton removeItemButton,
@@ -390,7 +305,7 @@ public class ShopManagement {
     }
 
 
-    @SuppressWarnings("methodlength")
+
     // MODIFIES: this
     // EFFECTS: adds item to inventory
     private void addItemsToInventory() {
@@ -415,45 +330,8 @@ public class ShopManagement {
         // add input fields and labels to the frame
         JPanel addItemPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.insets = new Insets(10, 10, 10, 10);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-
-        addItemPanel.add(nameLabel, gbc);
-        gbc.gridx++;
-        addItemPanel.add(nameField, gbc);
-        gbc.gridx = 0;
-        gbc.gridy++;
-        addItemPanel.add(quantityLabel, gbc);
-        gbc.gridx++;
-        addItemPanel.add(quantityField, gbc);
-        gbc.gridx = 0;
-        gbc.gridy++;
-        addItemPanel.add(unitLabel, gbc);
-        gbc.gridx++;
-        addItemPanel.add(unitField, gbc);
-        gbc.gridx = 0;
-        gbc.gridy++;
-        addItemPanel.add(thresholdLabel, gbc);
-        gbc.gridx++;
-        addItemPanel.add(thresholdField, gbc);
-        gbc.gridx = 0;
-        gbc.gridy++;
-        addItemPanel.add(priceLabel, gbc);
-        gbc.gridx++;
-        addItemPanel.add(priceField, gbc);
-        gbc.gridx = 0;
-        gbc.gridy++;
-        gbc.gridwidth = 2;
-        addItemPanel.add(addButton, gbc);
-
-        // add an action listener to the add button
-        addButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                helperForAddingItems(nameField, quantityField, unitField, thresholdField,priceField, addItemFrame);
-            }
-        });
+        addItemsToInventoryHelper(addItemFrame, nameLabel, nameField, quantityLabel, quantityField, unitLabel,
+                unitField, thresholdLabel, thresholdField, priceLabel, priceField, addButton, addItemPanel, gbc);
 
 
         // add the add item panel to the frame
@@ -464,15 +342,36 @@ public class ShopManagement {
         addItemFrame.setVisible(true);
     }
 
-    @SuppressWarnings("methodlength")
+    private void addItemsToInventoryHelper(JFrame addItemFrame, JLabel nameLabel, JTextField nameField,
+                                           JLabel quantityLabel, JTextField quantityField, JLabel unitLabel,
+                                           JTextField unitField, JLabel thresholdLabel, JTextField thresholdField,
+                                           JLabel priceLabel, JTextField priceField, JButton addButton,
+                                           JPanel addItemPanel, GridBagConstraints gbc) {
+        gbcHelper(gbc);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+
+        addItemPanel.add(nameLabel, gbc);
+        gbc.gridx++;
+        addItemPanel.add(nameField, gbc);
+        gbc.gridx = 0;
+        gbc.gridy++;
+        creditTransactionFrame(quantityLabel, quantityField, unitLabel, unitField, thresholdLabel, thresholdField,
+                priceLabel, priceField, addItemPanel, gbc);
+        addItemPanel.add(addButton, gbc);
+
+        // add an action listener to the add button
+        addButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                helperForAddingItems(nameField, quantityField, unitField, thresholdField, priceField, addItemFrame);
+            }
+        });
+    }
+
+
     private void helperForAddingItems(JTextField nameField, JTextField quantityField, JTextField unitField,
                                       JTextField thresholdField, JTextField priceField, JFrame addItemFrame) {
         String name = nameField.getText().toLowerCase();
-        if (inventory.isItemPresent(name)) {
-            JOptionPane.showMessageDialog(addItemFrame,
-                    "Item with name " + name + " already exists in inventory.",
-                    "Item Already Exists",
-                    JOptionPane.ERROR_MESSAGE);
+        if (helperForHelper2(addItemFrame, name)) {
             return;
         }
 
@@ -494,11 +393,25 @@ public class ShopManagement {
             return;
         }
 
-        if (price > bank.getBalance()) {
+        helperForHelperOfAddItem(addItemFrame, name, quantity, unit, threshold, price);
+    }
+
+    private boolean helperForHelper2(JFrame addItemFrame, String name) {
+        if (inventory.isItemPresent(name)) {
             JOptionPane.showMessageDialog(addItemFrame,
-                    "You don't have enough balance in your account",
-                    "Insufficient Funds",
+                    "Item with name " + name + " already exists in inventory.",
+                    "Item Already Exists",
                     JOptionPane.ERROR_MESSAGE);
+            return true;
+        }
+        return false;
+    }
+
+    private void helperForHelperOfAddItem(JFrame addItemFrame, String name, int quantity, String unit, int threshold,
+                                          double price) {
+        if (price > bank.getBalance()) {
+            conditionalCheckerRefactor(addItemFrame,
+                    "You don't have enough balance in your account", "Insufficient Funds");
         } else {
             inventory.boughtNewItem(name, quantity, unit, threshold, price);
             JOptionPane.showMessageDialog(addItemFrame,
@@ -508,7 +421,6 @@ public class ShopManagement {
             addItemFrame.dispose();
         }
     }
-
 
 
     @SuppressWarnings("methodlength")
@@ -538,13 +450,13 @@ public class ShopManagement {
                 if (inventory.removeItem(name)) {
                     JOptionPane.showMessageDialog(null, "Item removed successfully");
                 } else {
-                    JOptionPane.showMessageDialog(null, "Unable to remove item from inventory");
+                    JOptionPane.showMessageDialog(null, "Unable to ");
                 }
             }
         }
     }
 
-    @SuppressWarnings("methodlength")
+
     private void thresholdCheck() {
         JTextField itemNameField = new JTextField(10);
 
@@ -565,19 +477,23 @@ public class ShopManagement {
             }
 
             Item item = inventory.giveItem(name);
-            if (item != null) {
-                if (item.belowThreshold()) {
-                    JOptionPane.showMessageDialog(null, "Quantity for " + name
-                            + " is lower than the threshold " + item.getThreshold());
-                } else {
-                    JOptionPane.showMessageDialog(null, "Quantity for " + name
-                            + " is higher than the threshold " + item.getThreshold());
-                }
+            thresholdCheckHelper(name, item);
+        }
+    }
 
+    private void thresholdCheckHelper(String name, Item item) {
+        if (item != null) {
+            if (item.belowThreshold()) {
+                JOptionPane.showMessageDialog(null, "Quantity for " + name
+                        + " is lower than the threshold " + item.getThreshold());
             } else {
-                JOptionPane.showMessageDialog(null,
-                        "Cannot find the item. Please check your spelling.");
+                JOptionPane.showMessageDialog(null, "Quantity for " + name
+                        + " is higher than the threshold " + item.getThreshold());
             }
+
+        } else {
+            JOptionPane.showMessageDialog(null,
+                    "Cannot find the item. Please check your spelling.");
         }
     }
 
@@ -604,209 +520,741 @@ public class ShopManagement {
         frame.setVisible(true);
     }
 
-    //EFFECTS: shows inventory menu
-    private void inventoryMenu() {
-        System.out.println("\nSelect from:");
-        System.out.println("\t1 -> Add item");
-        System.out.println("\t2 -> Remove item");
-        System.out.println("\t3 -> Check item threshold");
-        System.out.println("\t4 -> List of all Items in Inventory");
-        System.out.println("\tq -> Quit inventory management");
 
-    }
 
     // MODIFIES: this
     // EFFECTS: directs to managing creditors
-    private void manageCreditors() {
-        String command;
-        while (true) {
-            creditorsMenu();
-            command = input.next();
-            command = command.toLowerCase();
-            if (command.equals("q")) {
-                return;
-            } else if (command.equals("1")) {
-                listCreditors();
-            } else if (command.equals("2")) {
-                addCreditor();
-            } else if (command.equals("3")) {
-                removeCreditor();
-            } else if (command.equals("4")) {
-                recordPayment();
-            } else {
-                System.out.println("Selection not valid...");
-            }
-        }
+    public void manageCreditors() {
+        JFrame creditorFrame = new JFrame("Manage Creditors");
+        JLabel creditorLabel = new JLabel("Manage Creditors");
+        creditorFrame.setLayout(null);
+        creditorFrame.setSize(700, 800);
+
+        JButton listCreditorsButton = new JButton("List Creditors");
+        JButton addCreditorButton = new JButton("Add Creditor");
+        JButton removeCreditorButton = new JButton("Remove Creditor");
+        JButton recordPaymentButton = new JButton("Record Payment");
+        JButton backButton = new JButton("Quit");
+        manageTransactionRefactor(creditorFrame,creditorLabel,listCreditorsButton,addCreditorButton,
+                removeCreditorButton,recordPaymentButton,backButton);
+
+        creditorActionListeners(creditorFrame,
+                listCreditorsButton, addCreditorButton, removeCreditorButton, recordPaymentButton, backButton);
+
+
+        creditorFrame.setVisible(true);
     }
 
-    // EFFECTS: shows creditor menu
-    private void creditorsMenu() {
-        System.out.println("\nSelect from:");
-        System.out.println("\t1 -> List creditors");
-        System.out.println("\t2 -> Add creditor");
-        System.out.println("\t3 -> Remove creditor");
-        System.out.println("\t4 -> Record payment by creditor");
-        System.out.println("\tq -> Quit");
+    private void creditorActionListeners(JFrame creditorFrame, JButton listCreditorsButton,
+                                         JButton addCreditorButton, JButton removeCreditorButton,
+                                         JButton recordPaymentButton, JButton backButton) {
+        // Add action listeners to buttons
+        listCreditorsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                listCreditors();
+            }
+        });
+
+        addCreditorButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addCreditor();
+            }
+        });
+
+        removeCreditorButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                removeCreditor();
+            }
+        });
+
+        creditorsActionListerners2(creditorFrame, recordPaymentButton, backButton);
+    }
+
+    private void creditorsActionListerners2(JFrame creditorFrame, JButton recordPaymentButton, JButton backButton) {
+        recordPaymentButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                recordPayment();
+            }
+        });
+
+        backButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                creditorFrame.dispose();
+                frame.setVisible(true);
+
+            }
+        });
     }
 
     // EFFECTS: list all creditors with their amount owed
     private void listCreditors() {
-        System.out.println("\nList of creditors:");
-        for (int n = 0; n < creditors.creditorsLength(); n++) {
-            Creditor creditor = creditors.creditorsGet(n);
-            double amountOwed = creditor.getOwed();
+        String[] columnNames = {"Name", "Amount Owed"};
+        Object[][] data = new Object[creditors.size()][2];
 
-            System.out.println("Name: " + creditor.getName()
-                    + " Amount Owed: " + amountOwed);
+        for (int i = 0; i < creditors.size(); i++) {
+            Creditor creditor = creditors.creditorsGet(i);
+            data[i][0] = creditor.getName();
+            data[i][1] = creditor.getOwed();
+
         }
 
-        System.out.printf("Total amount owed: %.2f%n", creditors.getTotalAmountOwed());
+        JTable table = new JTable(data, columnNames);
+        JScrollPane scrollPane = new JScrollPane(table);
+
+        JFrame frame = new JFrame("Creditors");
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setSize(500, 400);
+        frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
+        frame.setVisible(true);
     }
 
     // MODIFIES: this
     // EFFECTS: adds new creditor to creditors
     private void addCreditor() {
-        System.out.print("Enter creditor name: ");
-        String name = input.next();
-        name = name.toLowerCase();
-        creditor = new Creditor(name);
-        Creditors.addCreditors(this.creditor);
-        System.out.println("Creditor added successfully");
+        JTextField itemNameField = new JTextField();
+        Object[] message = {
+                "Enter Creditor name: ", itemNameField
+        };
+        int option = JOptionPane.showConfirmDialog(null, message, "Add Creditor",
+                JOptionPane.OK_CANCEL_OPTION);
+
+        if (option == JOptionPane.OK_OPTION) {
+            String name = itemNameField.getText().toLowerCase();
+            int confirmationOption = JOptionPane.showConfirmDialog(null,
+                    "Are you sure you want to add " + name + " to creditors?",
+                    "Confirm Removal", JOptionPane.YES_NO_OPTION);
+            if (confirmationOption == JOptionPane.YES_OPTION) {
+                Creditor creditor = new Creditor(name);
+                Creditors.addCreditors(creditor);
+                JOptionPane.showMessageDialog(null,"Creditor Added successfully");
+
+            }
+        }
     }
 
     // MODIFIES: this
     // EFFECTS: removes creditor from creditors
     private void removeCreditor() {
-        System.out.print("Enter creditor name: ");
-        String name = input.next();
-        name = name.toLowerCase();
+        JTextField itemNameField = new JTextField();
+        Object[] message = {
+                "Enter Creditor name: ", itemNameField
+        };
+        int option = JOptionPane.showConfirmDialog(null, message, "Remove Creditor",
+                JOptionPane.OK_CANCEL_OPTION);
 
-        creditors.removeCreditor(name);
-    }
+        if (option == JOptionPane.OK_OPTION) {
+            String name = itemNameField.getText().toLowerCase();
+            int confirmationOption = JOptionPane.showConfirmDialog(null,
+                    "Are you sure you want to remove " + name + " ?",
+                    "Confirm Removal", JOptionPane.YES_NO_OPTION);
+            if (confirmationOption == JOptionPane.YES_OPTION) {
+                if (creditors.removeCreditor(name)) {
+                    JOptionPane.showMessageDialog(null,"Creditor Added successfully");
+                } else {
+                    JOptionPane.showMessageDialog(null,"Cannot find the given Creditor");
 
-    // MODIFIES: this
-    // EFFECTS: records payment by creditors
-    private void recordPayment() {
-        System.out.print("Enter creditor name: ");
-        String name = input.next();
-        name = name.toLowerCase();
-        this.creditor = Creditors.getCreditor(name);
+                }
 
-        System.out.print("Enter payment amount: ");
-        double paymentAmount = input.nextDouble();
-
-        try {
-            creditor.paymentReceived(paymentAmount);
-            System.out.println("Payment recorded successfully");
-        } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-
-    // EFFECTS: manages transactions
-    private void manageTransaction() {
-        String command;
-
-        while (true) {
-            transactionMenu();
-            command = input.next();
-            command = command.toLowerCase();
-            if (command.equals("q")) {
-                return;
-            } else if (command.equals("1")) {
-                cashSales = new CashSales();
-                recordCashTransaction();
-            } else if (command.equals("2")) {
-                creditSales = new CreditSales();
-                recordCreditTransaction();
-            } else if (command.equals("3")) {
-                cashSales = new CashSales();
-                recordCashReturn();
-            } else if (command.equals("4")) {
-                creditSales = new CreditSales();
-                recordCreditReturn();
-            } else {
-                System.out.println("Selection not valid...");
             }
         }
     }
 
-    // EFFECTS: displays menu of transaction options to user
-    private void transactionMenu() {
-        System.out.println("\nSelect from:");
-        System.out.println("\t1 -> Record a cash transaction");
-        System.out.println("\t2 -> Record a credit transaction");
-        System.out.println("\t3 -> Record a cash return");
-        System.out.println("\t4 -> Record a credit return");
-        System.out.println("\tq -> Quit");
+    // MODIFIES: this
+// EFFECTS: records payment by creditors
+    private void recordPayment() {
+        JFrame recordPayment = new JFrame("Record Payment");
+        recordPayment.setLayout(null);
+        recordPayment.setSize(400,500);
+        JButton confirm = new JButton("Record Payment");
+        JLabel nameLabel = new JLabel("Name:");
+        JTextField nameField = new JTextField();
+        JLabel paymentAmountLabel = new JLabel("Payment Amount:");
+        JTextField paymentAmountField = new JTextField();
+        nameLabel.setBounds(50,100,100,30);
+        nameField.setBounds(160,100,100,30);
+        paymentAmountLabel.setBounds(50,150,100,30);
+        paymentAmountField.setBounds(160,150,100,30);
+        confirm.setBounds(125,250,150,50);
+        recordPayment.add(nameField);
+        recordPayment.add(nameLabel);
+        recordPayment.add(paymentAmountLabel);
+        recordPayment.add(paymentAmountField);
+        recordPayment.add(confirm);
+        recordPayment.setVisible(true);
+
+        recordPaymentHelper(confirm, nameField, paymentAmountField);
+
     }
 
+    private void recordPaymentHelper(JButton confirm, JTextField nameField, JTextField paymentAmountField) {
+        confirm.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    Creditor creditor = creditors.getCreditor(nameField.getText());
+                    double paymentAmount = Double.parseDouble(paymentAmountField.getText());
+                    if (creditor == null) {
+                        JOptionPane.showMessageDialog(null,
+                                "There is no Creditor with this name in your list");
+                        } else {
+                        creditor.paymentReceived(paymentAmount);
+                        JOptionPane.showMessageDialog(null,
+                                "Payment of $" + paymentAmount + " received from " + creditor.getName()
+                                    + " recorded successfully.");
+                    }
+                } catch (IllegalArgumentException e1) {
+                    JOptionPane.showMessageDialog(null,
+                            "Invalid input. Please check name and payment amount.");
+                }
+            }
+        });
+    }
+
+    @SuppressWarnings("methodlength")
+    // EFFECTS: manages transactions
+    private void manageTransaction() {
+
+        JFrame transactionFrame = new JFrame();
+        transactionFrame.setLayout(null);
+        JLabel transactionLabel = new JLabel("Perform a Transaction");
+        JButton creditButton = new JButton("Credit Sale");
+        JButton cashButton = new JButton("Cash Sale");
+        JButton creditReturnButton = new JButton("Credit Return");
+        JButton cashReturnButton = new JButton("Cash Return");
+        JButton quitButton = new JButton("quit");
+        manageTransactionRefactor(transactionFrame, transactionLabel, creditButton, cashButton, creditReturnButton,
+                cashReturnButton, quitButton);
+        addingListenersToTransactionButton(transactionFrame, creditButton, cashButton, quitButton);
+        creditReturnButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                recordCreditReturn();
+            }
+        });
+        cashReturnButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                recordCashReturn();
+            }
+        });
+        transactionFrame.setVisible(true);
+    }
+
+    private void addingListenersToTransactionButton(JFrame transactionFrame, JButton creditButton, JButton cashButton,
+                                                    JButton quitButton) {
+        creditButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                recordCreditTransaction();
+            }
+        });
+        cashButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                recordCashTransaction();
+            }
+        });
+        quitButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                transactionFrame.dispose();
+                frame.setVisible(true);
+            }
+        });
+    }
+
+    private void manageTransactionRefactor(JFrame transactionFrame, JLabel transactionLabel, JButton creditButton,
+                                           JButton cashButton, JButton creditReturnButton, JButton cashReturnButton,
+                                           JButton quitButton) {
+        transactionFrame.add(transactionLabel);
+        transactionFrame.add(creditButton);
+        transactionFrame.add(cashButton);
+        transactionFrame.add(creditReturnButton);
+        transactionFrame.add(cashReturnButton);
+        transactionFrame.add(quitButton);
+        transactionFrame.setSize(700,800);
+        transactionLabel.setBounds(button.getBounds());
+        creditButton.setBounds(button1.getBounds());
+        cashButton.setBounds(button2.getBounds());
+        creditReturnButton.setBounds(button3.getBounds());
+        cashReturnButton.setBounds(button4.getBounds());
+        quitButton.setBounds(button5.getBounds());
+    }
+
+    @SuppressWarnings("methodlength")
     // EFFECTS: records a cash transaction
     private void recordCashTransaction() {
-        System.out.print("Enter item name: ");
-        String name = input.next();
-        name = name.toLowerCase();
-        System.out.print("Enter quantity: ");
-        int quantity = input.nextInt();
-        System.out.print("Enter total price: ");
-        double price = input.nextDouble();
-        cashSales.sales(name,quantity,price);
+        JFrame cashTransactionFrame = new JFrame("Perform Cash Transaction");
+        cashTransactionFrame.setSize(400, 300);
+
+        JLabel nameLabel = new JLabel("Item Name:");
+        JTextField nameField = new JTextField(20);
+        JLabel quantityLabel = new JLabel("Quantity:");
+        JTextField quantityField = new JTextField(20);
+        JLabel priceLabel = new JLabel("Price:");
+        JTextField priceField = new JTextField(20);
+        JButton transactionButton = new JButton("Confirm Transaction");
+
+        JPanel cashTransactionPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbcHelper(gbc);
+        cashTransactionGrid(gbc.fill, GridBagConstraints.HORIZONTAL, cashTransactionPanel,
+                nameLabel, gbc, nameField, 1, quantityLabel, quantityField, priceLabel, priceField);
+        refactoring(cashTransactionFrame, transactionButton, cashTransactionPanel, gbc);
+        transactionButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String name = nameField.getText();
+                int quantity = Integer.parseInt(quantityField.getText());
+                double price = Double.parseDouble(priceField.getText());
+                cashTransactionHelper(name, quantity, price, cashTransactionFrame);
+            }
+        });
+    }
+
+    private void gbcHelper(GridBagConstraints gbc) {
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.insets = new Insets(10, 10, 10, 10);
+    }
+
+    private void refactoring(JFrame cashTransactionFrame, JButton transactionButton, JPanel cashTransactionPanel,
+                             GridBagConstraints gbc) {
+        cashTransactionPanel.add(transactionButton, gbc);
+
+        cashTransactionFrame.add(cashTransactionPanel);
+        cashTransactionFrame.setVisible(true);
+    }
+
+    private void cashTransactionHelper(String name, int quantity, double price, JFrame cashTransactionFrame) {
+        try {
+            if (!inventory.isItemPresent(name)) {
+                conditionalCheckerRefactor(cashTransactionFrame, "Item not present in Inventory",
+                        "Invalid Item");
+            } else if (quantity < 0) {
+                conditionalCheckerRefactor(cashTransactionFrame, "Please Enter a positive quantity", "Invalid Quanity");
+            } else if (inventory.giveItem(name).getQuantity() < quantity) {
+                conditionalCheckerRefactor(cashTransactionFrame,
+                        "The item selected does not have the required quantity",
+                        "Invalid Quanity");
+            } else {
+                doCashTransaction(name, quantity, price, cashTransactionFrame);
+
+
+            }
+
+
+
+        } catch (NumberFormatException e1) {
+            JOptionPane.showMessageDialog(cashTransactionFrame,
+                    "Please Enter a valid number",
+                    "Invalid Number",
+                    JOptionPane.ERROR_MESSAGE);
+
+
+        }
+    }
+
+    private void conditionalCheckerRefactor(JFrame cashTransactionFrame, String itemNotPresentInInventory,
+                                            String invalidItem) {
+        JOptionPane.showMessageDialog(cashTransactionFrame,
+                itemNotPresentInInventory,
+                invalidItem,
+                JOptionPane.ERROR_MESSAGE);
+    }
+
+    private void doCashTransaction(String name, int quantity, double price, JFrame cashTransactionFrame) {
+        CashSales cashSales = new CashSales();
+        cashSales.sales(name, quantity, price);
+        JOptionPane.showMessageDialog(cashTransactionFrame,"Transaction confirmed");
+        cashTransactionFrame.dispose();
+    }
+
+    private void cashTransactionGrid(int gbc, int horizontal, JPanel cashTransactionPanel, JLabel nameLabel,
+                                     GridBagConstraints gbc1, JTextField nameField, int gridy, JLabel quantityLabel,
+                                     JTextField quantityField, JLabel priceLabel, JTextField priceField) {
+        gbc = horizontal;
+        cashTransactionPanel.add(nameLabel, gbc1);
+        gbc1.gridx = 1;
+        cashTransactionPanel.add(nameField, gbc1);
+        gbc1.gridx = 0;
+        gbc1.gridy = gridy;
+        cashTransactionPanel.add(quantityLabel, gbc1);
+        gbc1.gridx = 1;
+        cashTransactionPanel.add(quantityField, gbc1);
+        gbc1.gridx = 0;
+        gbc1.gridy = 3;
+        cashTransactionPanel.add(priceLabel, gbc1);
+        gbc1.gridx = 1;
+        cashTransactionPanel.add(priceField, gbc1);
+        gbc1.gridx = 0;
+        gbc1.gridy = 4;
+        gbc1.gridwidth = 2;
     }
 
     //EFFECTS: records credit transaction
     private void recordCreditTransaction() {
-        System.out.print("Enter item name: ");
-        String name = input.next();
-        name = name.toLowerCase();
+        JFrame creditTransactionFrame = new JFrame("Perform Credit Transaction");
+        creditTransactionFrame.setSize(400, 300);
 
-        System.out.print("Enter customer name: ");
-        String customerName = input.next();
-        customerName = customerName.toLowerCase();
+        JLabel nameLabel = new JLabel("Item Name:");
+        JTextField nameField = new JTextField(20);
+        JLabel customerLabel = new JLabel("Customer Name:");
+        JTextField customerField = new JTextField(20);
+        JLabel quantityLabel = new JLabel("Quantity:");
+        JTextField quantityField = new JTextField(20);
+        JLabel priceLabel = new JLabel("Price:");
+        JTextField priceField = new JTextField(20);
+        JButton transactionButton = new JButton("Confirm Transaction");
 
-        System.out.print("Enter quantity: ");
-        int quantity = input.nextInt();
+        JPanel creditTransactionPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10,10,10,10);
+        creditTransactionGrid(nameLabel, nameField, customerLabel, customerField, quantityLabel, quantityField,
+                priceLabel, priceField, transactionButton, creditTransactionPanel, gbc);
 
-        System.out.print("Enter total price: ");
-        double price = input.nextDouble();
+        creditTransactionFrame.setContentPane(creditTransactionPanel);
+        creditTransactionFrame.pack();
+        creditTransactionFrame.setLocationRelativeTo(null);
+        creditTransactionFrame.setVisible(true);
 
-        creditSales.sales(name,customerName,quantity,price);
+        creditTransactionActionListener(creditTransactionFrame, nameField, customerField, quantityField, priceField,
+                transactionButton);
+    }
+
+    private void creditTransactionActionListener(JFrame creditTransactionFrame, JTextField nameField,
+                                                 JTextField customerField, JTextField quantityField,
+                                                 JTextField priceField, JButton transactionButton) {
+        transactionButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                listenerForCredit(nameField, customerField, quantityField, priceField, creditTransactionFrame);
+            }
+        });
+    }
+
+    private void creditTransactionGrid(JLabel nameLabel, JTextField nameField, JLabel customerLabel,
+                                       JTextField customerField, JLabel quantityLabel, JTextField quantityField,
+                                       JLabel priceLabel, JTextField priceField, JButton transactionButton,
+                                       JPanel creditTransactionPanel, GridBagConstraints gbc) {
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        creditTransactionGridHelper(nameLabel, nameField, creditTransactionPanel, gbc);
+        creditTransactionPanel.add(customerLabel, gbc);
+        gbc.gridx = 1;
+        creditTransactionPanel.add(customerField, gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        creditTransactionPanel.add(quantityLabel, gbc);
+        gbc.gridx = 1;
+        creditTransactionPanel.add(quantityField, gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        creditTransactionPanel.add(priceLabel, gbc);
+        gbc.gridx = 1;
+        creditTransactionPanel.add(priceField, gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.CENTER;
+
+        creditTransactionPanel.add(transactionButton, gbc);
+    }
+
+    private void creditTransactionGridHelper(JLabel nameLabel, JTextField nameField, JPanel creditTransactionPanel,
+                                             GridBagConstraints gbc) {
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        creditTransactionPanel.add(nameLabel, gbc);
+        gbc.gridx = 1;
+        creditTransactionPanel.add(nameField, gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+    }
+
+    @SuppressWarnings("methodlength")
+    private void listenerForCredit(JTextField nameField, JTextField customerField, JTextField quantityField,
+                                   JTextField priceField, JFrame creditTransactionFrame) {
+        String name = nameField.getText();
+        String customerName = customerField.getText();
+        int quantity = Integer.parseInt(quantityField.getText());
+        double price = Double.parseDouble(priceField.getText());
+
+        if (price < 0) {
+            conditionalCheckerRefactor(creditTransactionFrame, "Enter a valid price",
+                    "Invalid Price");
+        } else if (quantity < 0) {
+            conditionalCheckerRefactor(creditTransactionFrame, "Enter a valid quantity",
+                    "Invalid Quantity");
+        } else if (!inventory.isItemPresent(name)) {
+            conditionalCheckerRefactor(creditTransactionFrame,
+                    "The item " + name + " doesn't exist in your inventory",
+                    "Invalid Item");
+        } else if (inventory.giveItem(name).getQuantity() < quantity) {
+            conditionalCheckerRefactor(creditTransactionFrame,
+                    "The quantity of " + name + " is less than quantity being sold",
+                    "Invalid Quantity");
+        } else {
+            CreditSales creditSales = new CreditSales();
+            creditSales.sales(name, customerName, quantity, price);
+            JOptionPane.showMessageDialog(creditTransactionFrame,"Transaction confirmed");
+            creditTransactionFrame.dispose();
+        }
+    }
 
 
-
+    private void creditTransactionFrame(JLabel nameLabel, JTextField nameField, JLabel customerLabel,
+                                        JTextField customerField, JLabel quantityLabel, JTextField quantityField,
+                                        JLabel priceLabel, JTextField priceField, JPanel creditTransactionPanel,
+                                        GridBagConstraints gbc) {
+        creditTransactionPanel.add(nameLabel, gbc);
+        gbc.gridx++;
+        creditTransactionPanel.add(nameField, gbc);
+        gbc.gridx = 0;
+        gbc.gridy++;
+        creditTransactionPanel.add(customerLabel, gbc);
+        gbc.gridx++;
+        creditTransactionPanel.add(customerField, gbc);
+        gbc.gridx = 0;
+        gbc.gridy++;
+        creditTransactionPanel.add(quantityLabel, gbc);
+        gbc.gridx++;
+        creditTransactionPanel.add(quantityField, gbc);
+        gbc.gridx = 0;
+        gbc.gridy++;
+        creditTransactionPanel.add(priceLabel, gbc);
+        gbc.gridx++;
+        creditTransactionPanel.add(priceField, gbc);
+        gbc.gridx = 0;
+        gbc.gridy++;
+        gbc.gridwidth = 2;
     }
 
     //EFFECTS: records cash return
     public void recordCashReturn() {
-        System.out.print("Enter item name: ");
-        String name = input.next();
-        name = name.toLowerCase();
-        System.out.print("Enter quantity: ");
-        int quantity = input.nextInt();
-        System.out.print("Enter total price: ");
-        double price = input.nextDouble();
+        JFrame cashReturnTransactionFrame = new JFrame("Perform Cash Return");
+        cashReturnTransactionFrame.setSize(400, 300);
 
-        cashSales.cashReturn(name,quantity,price);
+        JLabel nameLabel = new JLabel("Item Name:");
+        JTextField nameField = new JTextField(20);
+        JLabel quantityLabel = new JLabel("Quantity:");
+        JTextField quantityField = new JTextField(20);
+        JLabel priceLabel = new JLabel("Price:");
+        JTextField priceField = new JTextField(20);
+        JButton transactionButton = new JButton("Confirm Cash Return");
+
+        JPanel cashTransactionPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbcHelper(gbc);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+
+        helperForCashReturn(nameLabel, nameField, quantityLabel, quantityField, priceLabel, priceField,
+                transactionButton,
+                cashTransactionPanel, gbc);
+
+        cashReturnHelper(cashReturnTransactionFrame, nameField, quantityField, priceField, transactionButton);
+
+        cashReturnTransactionFrame.add(cashTransactionPanel);
+        cashReturnTransactionFrame.setVisible(true);
+    }
+
+    @SuppressWarnings("methodlength")
+    private void cashReturnHelper(JFrame cashReturnTransactionFrame, JTextField nameField, JTextField quantityField,
+                                  JTextField priceField, JButton transactionButton) {
+        transactionButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    String name = nameField.getText().toLowerCase();
+                    int quantity = Integer.parseInt(quantityField.getText());
+                    double price = Double.parseDouble(priceField.getText());
+
+
+                    if (!inventory.isItemPresent(name)) {
+                        JOptionPane.showMessageDialog(cashReturnTransactionFrame,
+                                "The item is not present in Inventory",
+                                "Invalid Item", JOptionPane.ERROR_MESSAGE);
+                    } else {
+                        CashSales cashSales = new CashSales();
+                        cashSales.cashReturn(name, quantity, price);
+                        JOptionPane.showMessageDialog(cashReturnTransactionFrame,
+                                "Cash return successfully completed");
+                    }
+
+                    cashReturnTransactionFrame.dispose();
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(cashReturnTransactionFrame, "Please enter a valid number",
+                            "Invalid Number", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+    }
+
+    private void helperForCashReturn(JLabel nameLabel, JTextField nameField, JLabel quantityLabel,
+                                     JTextField quantityField, JLabel priceLabel, JTextField priceField,
+                                     JButton transactionButton, JPanel cashTransactionPanel, GridBagConstraints gbc) {
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.insets = new Insets(5, 5, 5, 5);
+        cashTransactionPanel.add(nameLabel, gbc);
+
+        helperForCashReturn2(nameField, quantityLabel, cashTransactionPanel, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        cashTransactionPanel.add(quantityField, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        cashTransactionPanel.add(priceLabel, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        cashTransactionPanel.add(priceField, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.gridwidth = 2;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.anchor = GridBagConstraints.CENTER;
+        cashTransactionPanel.add(transactionButton, gbc);
+    }
+
+    private void helperForCashReturn2(JTextField nameField, JLabel quantityLabel, JPanel cashTransactionPanel,
+                                      GridBagConstraints gbc) {
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        cashTransactionPanel.add(nameField, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        cashTransactionPanel.add(quantityLabel, gbc);
     }
 
     //EFFECTS: records credit return
     public void recordCreditReturn() {
-        System.out.print("Enter item name: ");
-        String name = input.next();
-        name = name.toLowerCase();
+        JFrame creditReturnTransactionFrame = new JFrame("Perform Credit Return");
+        creditReturnTransactionFrame.setSize(400, 300);
 
-        System.out.print("Enter customer name: ");
-        String customerName = input.next();
-        customerName = customerName.toLowerCase();
+        JLabel nameLabel = new JLabel("Item Name:");
+        JTextField nameField = new JTextField(20);
+        JLabel customerLabel = new JLabel("Customer Name:");
+        JTextField customerField = new JTextField(20);
+        JLabel quantityLabel = new JLabel("Quantity:");
+        JTextField quantityField = new JTextField(20);
+        JLabel priceLabel = new JLabel("Price:");
+        JTextField priceField = new JTextField(20);
+        JButton returnButton = new JButton("Confirm Credit Return");
 
-        System.out.print("Enter quantity: ");
-        int quantity = input.nextInt();
+        JPanel creditReturnPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbcHelper(gbc);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        System.out.print("Enter total price: ");
-        double price = input.nextDouble();
+        creditReturnGrid(nameLabel, nameField, customerLabel, customerField, quantityLabel, quantityField,
+                priceLabel, creditReturnPanel, gbc);
 
-        creditSales.recordCreditReturn(name,customerName,quantity,price);
+        creditReturnHelper2(creditReturnTransactionFrame, nameField, customerField, quantityField, priceField,
+                returnButton, creditReturnPanel, gbc);
 
+        creditReturnTransactionFrame.add(creditReturnPanel);
+        creditReturnTransactionFrame.setVisible(true);
+    }
+
+    private void creditReturnHelper2(JFrame creditReturnTransactionFrame, JTextField nameField,
+                                     JTextField customerField, JTextField quantityField, JTextField priceField,
+                                     JButton returnButton, JPanel creditReturnPanel, GridBagConstraints gbc) {
+        gbc.gridx = 1;
+        gbc.gridy = 3;
+        creditReturnPanel.add(priceField, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        gbc.gridwidth = 2;
+        creditReturnPanel.add(returnButton, gbc);
+
+        returnButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                creditReturnActionPerformed(nameField, customerField, quantityField, priceField,
+                        creditReturnTransactionFrame);
+            }
+        });
+    }
+
+    private void creditReturnGrid(JLabel nameLabel, JTextField nameField, JLabel customerLabel,
+                                  JTextField customerField, JLabel quantityLabel, JTextField quantityField,
+                                  JLabel priceLabel, JPanel creditReturnPanel, GridBagConstraints gbc) {
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        creditReturnPanel.add(nameLabel, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        creditReturnPanel.add(nameField, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        creditReturnPanel.add(customerLabel, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        creditReturnPanel.add(customerField, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        creditReturnPanel.add(quantityLabel, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        creditReturnPanel.add(quantityField, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        creditReturnPanel.add(priceLabel, gbc);
+    }
+
+    private void creditReturnActionPerformed(JTextField nameField, JTextField customerField,
+                                             JTextField quantityField, JTextField priceField,
+                                             JFrame creditReturnTransactionFrame) {
+        try {
+            String name = nameField.getText();
+            String customerName = customerField.getText();
+            int quantity = Integer.parseInt(quantityField.getText());
+            double price = Double.parseDouble(priceField.getText());
+            creditReturnHelper3(creditReturnTransactionFrame, name, customerName, quantity, price);
+
+
+        } catch (NumberFormatException e1) {
+            JOptionPane.showMessageDialog(creditReturnTransactionFrame, "Please Enter a valid number",
+                    "Invalid Number",
+                    JOptionPane.ERROR_MESSAGE);
+
+
+        }
+    }
+
+    private void creditReturnHelper3(JFrame creditReturnTransactionFrame, String name, String customerName,
+                                     int quantity, double price) {
+        if (Creditors.getCreditor(customerName) == null) {
+            JOptionPane.showMessageDialog(creditReturnTransactionFrame, "The creditor does not exist",
+                    "Invalid Creditor",
+                    JOptionPane.ERROR_MESSAGE);
+        } else if (!inventory.isItemPresent(name)) {
+            JOptionPane.showMessageDialog(creditReturnTransactionFrame,
+                    "The item you are trying to return doesn't exist","Invalid Item",
+                    JOptionPane.ERROR_MESSAGE);
+        } else {
+            CreditSales creditSales = new CreditSales();
+            creditSales.recordCreditReturn(name, customerName, quantity, price);
+            JOptionPane.showMessageDialog(creditReturnTransactionFrame,
+                    "Return successfully completed");
+            creditReturnTransactionFrame.dispose();
+        }
     }
 
     // EFFECTS: saves the workroom to file
@@ -823,9 +1271,9 @@ public class ShopManagement {
             jsonWriter.write(inventory,creditors,bank);
 
             jsonWriter.close();
-            System.out.println("Saved Shop Status file of " + name);
+            JOptionPane.showMessageDialog(null,"successfully saved data of " + name);
         } catch (FileNotFoundException e) {
-            System.out.println("Unable to write to file of " + name);
+            JOptionPane.showMessageDialog(null,"unable to save data of " + name);
         }
     }
 
@@ -838,9 +1286,9 @@ public class ShopManagement {
             inventory = jsonReader.read();
             creditors = jsonReader.readC();
             bank = jsonReader.readB();
-            System.out.println("Loaded Inventory and Creditors from " + name);
+            JOptionPane.showMessageDialog(null,"successfully loaded data of " + name);
         } catch (IOException e) {
-            System.out.println("Unable to read from file of " + name);
+            JOptionPane.showMessageDialog(null,"unable to load data of " + name);
         }
     }
 

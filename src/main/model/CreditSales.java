@@ -24,23 +24,18 @@ public class CreditSales  {
     public void sales(String itemName, String creditorName, int quantity, double price) {
         Creditor creditor;
         Item item = Inventory.getInventory().giveItem(itemName);
-        if (item == null) {
-            System.out.println("Item not found in inventory");
-        } else if (item.getQuantity() < quantity) {
-            System.out.println("Not enough quantity in inventory");
+        if (null == Creditors.getCreditor(creditorName)) {
+            creditor = new Creditor(creditorName);
+            Creditors.addCreditors(creditor);
+
         } else {
-            if (null == Creditors.getCreditor(creditorName)) {
-                creditor = new Creditor(creditorName);
-                Creditors.addCreditors(creditor);
-                System.out.println("Creditor added successfully");
-            } else {
-                creditor = Creditors.getCreditor(creditorName);
-            }
-            item.reduceQuantity(quantity);
-            creditor.addOwed(price);
-            System.out.println("Transaction successful");
+            creditor = Creditors.getCreditor(creditorName);
         }
+        item.reduceQuantity(quantity);
+        creditor.addOwed(price);
+
     }
+
 
 
     //
@@ -52,12 +47,9 @@ public class CreditSales  {
 
     public void recordCreditReturn(String itemName, String creditorName, int quantity, double price) {
         Creditor creditor = Creditors.getCreditor(creditorName);
-        if (null == Creditors.getCreditor(creditorName)) {
-            System.out.println("Can not find the given creditor");
-        } else {
-            Item item = Inventory.getInventory().giveItem(itemName);
-            increaseInventory(item, creditor, quantity, price);
-        }
+        Item item = Inventory.getInventory().giveItem(itemName);
+        increaseInventory(item, creditor, quantity, price);
+
 
     }
 
@@ -67,13 +59,10 @@ public class CreditSales  {
     //  subtracts the owed price from the creditor, and prints "Credit return recorded".
     //  Otherwise, prints appropriate error message.
     public void increaseInventory(Item item, Creditor creditor, int quantity, double price) {
-        if (item == null) {
-            System.out.println("Item not found in inventory");
-        } else {
-            item.increaseQuantity(quantity);
-            creditor.subtractOwed(price);
-            System.out.println("Credit return recorded");
-        }
+        item.increaseQuantity(quantity);
+        creditor.subtractOwed(price);
+        System.out.println("Credit return recorded");
+
 
     }
 

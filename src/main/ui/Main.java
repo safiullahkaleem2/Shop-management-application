@@ -1,5 +1,6 @@
 package ui;
 
+import javax.swing.*;
 import java.io.FileNotFoundException;
 // this class runs Shop management application
 
@@ -8,7 +9,7 @@ public class Main {
         try {
             new ShopManagement();
         } catch (FileNotFoundException e) {
-            System.out.println("Unable to run application: file not found");
+            JOptionPane.showMessageDialog(null,"Unable to find file");
         }
     }
 }

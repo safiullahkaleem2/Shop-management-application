@@ -54,7 +54,7 @@ public class Creditor implements Writable {
     public void paymentReceived(double amount) {
         subtractOwed(amount);
         Bank.getBank().addBalance(amount);
-        System.out.println("Payment received from" + this.getName());
+
 
     }
 

@@ -55,11 +55,10 @@ public class Creditors implements Writable {
             Creditor creditor = creditors.get(n);
             if (name.equals(creditor.getName())) {
                 creditors.remove(n);
-                System.out.println("Creditor removed successfully");
                 return true;
             }
         }
-        System.out.println("Cant find the given Creditor please check the spelling");
+
         return false;
     }
 
