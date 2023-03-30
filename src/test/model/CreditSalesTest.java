@@ -43,6 +43,19 @@ public class CreditSalesTest {
     }
 
     @Test
+    public void testSaleWithExistingCreditor() {
+        // Sell item2 to an existing creditor
+        creditSales.sales("item2", "creditor1", 2, 5);
+
+        // Check that creditor1 was not added again to the Creditors object
+        assertEquals(1, creditors.size());
+
+        // Check that the item's quantity was reduced and creditor1's owed amount was updated
+        assertEquals(3, inventory.giveItem("item2").getQuantity());
+        assertEquals(5, Creditors.getCreditor("creditor1").getOwed());
+    }
+
+    @Test
     public void testSales() {
         Item item3 = new Item("item3", 15, "piece", 10);   // Not enough Quantity
         Creditor creditor3 = new Creditor("creditor3");
