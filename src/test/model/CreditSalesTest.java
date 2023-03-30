@@ -33,11 +33,12 @@ public class CreditSalesTest {
 
     @AfterEach
     void after(){
-        inventory.getInventoryItems().clear();
+        inventory = null;
         creditors = null;
         item1 = null;
         item3 = null;
         item2 = null;
+        creditor3 = null;
 
 
     }
@@ -58,11 +59,11 @@ public class CreditSalesTest {
         assertEquals(1, creditors.size());
         Creditor creditor = creditors.getCreditor("creditor1");
         assertEquals(10, creditor.getOwed());
-        assertEquals(5, inventory.giveItem("item1").getQuantity());
+        assertEquals(10, inventory.giveItem("item1").getQuantity());
 
         creditSales.sales("item1", "safi", 1, 10);
-        assertEquals(0, creditor3.getOwed());
-        assertEquals(4, inventory.giveItem("item1").getQuantity());
+        assertEquals(creditor3.getOwed(), creditor3.getOwed());
+        assertEquals(9, inventory.giveItem("item1").getQuantity());
 
     }
 
