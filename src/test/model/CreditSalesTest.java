@@ -38,6 +38,7 @@ public class CreditSalesTest {
         item1 = null;
         item3 = null;
         item2 = null;
+        creditSales = null;
 
 
     }
