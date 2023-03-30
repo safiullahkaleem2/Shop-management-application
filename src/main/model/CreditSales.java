@@ -1,6 +1,5 @@
 package model;
 
-import java.util.ArrayList;
 //The CreditSales class represents a system for managing sales and returns of items on credit. It contains two methods
 // for recording sales and credit returns. The sales method takes in an item name, creditor name, quantity, and price,
 // and if the item is found in the inventory with enough quantity, reduces the quantity of the item, adds the owed price
@@ -11,7 +10,7 @@ import java.util.ArrayList;
 
 
 public class CreditSales  {
-    protected static ArrayList<Creditor> creditors;
+    protected Creditors creditors;
 
     //
      // Requires: itemName, creditorName, quantity, and price are not null and non-negative
@@ -22,20 +21,15 @@ public class CreditSales  {
      //
 
     public void sales(String itemName, String creditorName, int quantity, double price) {
-
+        Creditor creditor;
         Item item = Inventory.getInventory().giveItem(itemName);
         if (null == Creditors.getCreditor(creditorName)) {
-            Creditor creditor = new Creditor(creditorName);
+            creditor = new Creditor(creditorName);
             Creditors.addCreditors(creditor);
-            item.reduceQuantity(quantity);
-            creditor.addOwed(price);
-
-        } else {
-            Creditor creditor = Creditors.getCreditor(creditorName);
-            item.reduceQuantity(quantity);
-            creditor.addOwed(price);
         }
-
+        creditor = creditors.getCreditor(creditorName);
+        item.reduceQuantity(quantity);
+        creditor.addOwed(price);
 
     }
 
