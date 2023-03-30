@@ -37,7 +37,7 @@ public class ShopManagement {
     private JFrame frame;
     private JButton button;
 
-    @SuppressWarnings("methodlength")
+
     // EFFECTS: runs the teller application
     public ShopManagement() throws FileNotFoundException {
         frame = new JFrame("Shop Management System");
@@ -61,29 +61,48 @@ public class ShopManagement {
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         // add the buttons to the panel
-        buttonPanel.add(button, gbc);
-        gbc.gridy++;
-        buttonPanel.add(button1, gbc);
-        gbc.gridy++;
-        buttonPanel.add(button2, gbc);
-        gbc.gridy++;
-        buttonPanel.add(button3, gbc);
-        gbc.gridy++;
-        buttonPanel.add(button4, gbc);
-        gbc.gridy++;
-        buttonPanel.add(button5, gbc);
+        addButtonsToPanel(buttonPanel, gbc);
 
         // add the button panel to the frame
         frame.getContentPane().setLayout(new BorderLayout());
         frame.getContentPane().add(buttonPanel, BorderLayout.CENTER);
 
 
+        mainActionListener();
+
+        // show the frame
+        frame.setVisible(true);
+        initializer();
+
+    }
+
+    private void mainActionListener() {
         // add an action listener to the buttons
         button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 checkBank();
             }
         });
+        mainActionListenerHelper();
+        button4.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String input = JOptionPane.showInputDialog(null, "Please enter your name:",
+                        "Input", JOptionPane.PLAIN_MESSAGE);
+                if (input != null) {
+                    save(input);
+                }
+
+
+            }
+        });
+        button5.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
+    }
+
+    private void mainActionListenerHelper() {
         button1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 frame.setVisible(false);
@@ -102,27 +121,20 @@ public class ShopManagement {
                 manageTransaction();
             }
         });
-        button4.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                String input = JOptionPane.showInputDialog(null, "Please enter your name:",
-                        "Input", JOptionPane.PLAIN_MESSAGE);
-                if (input != null) {
-                    save(input);
-                }
+    }
 
-
-            }
-        });
-        button5.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                System.exit(0);
-            }
-        });
-
-        // show the frame
-        frame.setVisible(true);
-        initializer();
-
+    private void addButtonsToPanel(JPanel buttonPanel, GridBagConstraints gbc) {
+        buttonPanel.add(button, gbc);
+        gbc.gridy++;
+        buttonPanel.add(button1, gbc);
+        gbc.gridy++;
+        buttonPanel.add(button2, gbc);
+        gbc.gridy++;
+        buttonPanel.add(button3, gbc);
+        gbc.gridy++;
+        buttonPanel.add(button4, gbc);
+        gbc.gridy++;
+        buttonPanel.add(button5, gbc);
     }
 
     private void initializer() {
@@ -144,7 +156,7 @@ public class ShopManagement {
 
     }
 
-    @SuppressWarnings("methodlength")
+
     private void initializeNewShop() {
         double balance = 0;
         boolean validInput = false;
@@ -167,6 +179,10 @@ public class ShopManagement {
             }
         }
 
+        starter(balance);
+    }
+
+    private void starter(double balance) {
         Bank.getBank(balance);
         bank = Bank.getBank();
         inventory = Inventory.getInventory();
@@ -423,7 +439,7 @@ public class ShopManagement {
     }
 
 
-    @SuppressWarnings("methodlength")
+
     // MODIFIES: this
     // EFFECTS: removes item from inventory
     private void removeItemFromInventory() {
@@ -447,12 +463,16 @@ public class ShopManagement {
                     "Are you sure you want to remove " + name + " from inventory?",
                     "Confirm Removal", JOptionPane.YES_NO_OPTION);
             if (confirmationOption == JOptionPane.YES_OPTION) {
-                if (inventory.removeItem(name)) {
-                    JOptionPane.showMessageDialog(null, "Item removed successfully");
-                } else {
-                    JOptionPane.showMessageDialog(null, "Unable to ");
-                }
+                itemRemovalConfirmation(name);
             }
+        }
+    }
+
+    private void itemRemovalConfirmation(String name) {
+        if (inventory.removeItem(name)) {
+            JOptionPane.showMessageDialog(null, "Item removed successfully");
+        } else {
+            JOptionPane.showMessageDialog(null, "Unable to ");
         }
     }
 
@@ -715,7 +735,7 @@ public class ShopManagement {
         });
     }
 
-    @SuppressWarnings("methodlength")
+
     // EFFECTS: manages transactions
     private void manageTransaction() {
 
@@ -730,6 +750,11 @@ public class ShopManagement {
         manageTransactionRefactor(transactionFrame, transactionLabel, creditButton, cashButton, creditReturnButton,
                 cashReturnButton, quitButton);
         addingListenersToTransactionButton(transactionFrame, creditButton, cashButton, quitButton);
+        creditReturnActionListener(creditReturnButton, cashReturnButton);
+        transactionFrame.setVisible(true);
+    }
+
+    private void creditReturnActionListener(JButton creditReturnButton, JButton cashReturnButton) {
         creditReturnButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -742,7 +767,6 @@ public class ShopManagement {
                 recordCashReturn();
             }
         });
-        transactionFrame.setVisible(true);
     }
 
     private void addingListenersToTransactionButton(JFrame transactionFrame, JButton creditButton, JButton cashButton,
@@ -786,7 +810,7 @@ public class ShopManagement {
         quitButton.setBounds(button5.getBounds());
     }
 
-    @SuppressWarnings("methodlength")
+
     // EFFECTS: records a cash transaction
     private void recordCashTransaction() {
         JFrame cashTransactionFrame = new JFrame("Perform Cash Transaction");
@@ -806,6 +830,12 @@ public class ShopManagement {
         cashTransactionGrid(gbc.fill, GridBagConstraints.HORIZONTAL, cashTransactionPanel,
                 nameLabel, gbc, nameField, 1, quantityLabel, quantityField, priceLabel, priceField);
         refactoring(cashTransactionFrame, transactionButton, cashTransactionPanel, gbc);
+        cashTransactionActionListener(cashTransactionFrame, nameField, quantityField, priceField, transactionButton);
+    }
+
+    private void cashTransactionActionListener(JFrame cashTransactionFrame, JTextField nameField,
+                                               JTextField quantityField, JTextField priceField,
+                                               JButton transactionButton) {
         transactionButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -976,7 +1006,7 @@ public class ShopManagement {
         gbc.gridy = 1;
     }
 
-    @SuppressWarnings("methodlength")
+
     private void listenerForCredit(JTextField nameField, JTextField customerField, JTextField quantityField,
                                    JTextField priceField, JFrame creditTransactionFrame) {
         String name = nameField.getText();
@@ -984,6 +1014,11 @@ public class ShopManagement {
         int quantity = Integer.parseInt(quantityField.getText());
         double price = Double.parseDouble(priceField.getText());
 
+        conditionalCheckerHelper(creditTransactionFrame, name, customerName, quantity, price);
+    }
+
+    private void conditionalCheckerHelper(JFrame creditTransactionFrame, String name, String customerName,
+                                          int quantity, double price) {
         if (price < 0) {
             conditionalCheckerRefactor(creditTransactionFrame, "Enter a valid price",
                     "Invalid Price");
@@ -1062,7 +1097,7 @@ public class ShopManagement {
         cashReturnTransactionFrame.setVisible(true);
     }
 
-    @SuppressWarnings("methodlength")
+
     private void cashReturnHelper(JFrame cashReturnTransactionFrame, JTextField nameField, JTextField quantityField,
                                   JTextField priceField, JButton transactionButton) {
         transactionButton.addActionListener(new ActionListener() {
@@ -1074,16 +1109,7 @@ public class ShopManagement {
                     double price = Double.parseDouble(priceField.getText());
 
 
-                    if (!inventory.isItemPresent(name)) {
-                        JOptionPane.showMessageDialog(cashReturnTransactionFrame,
-                                "The item is not present in Inventory",
-                                "Invalid Item", JOptionPane.ERROR_MESSAGE);
-                    } else {
-                        CashSales cashSales = new CashSales();
-                        cashSales.cashReturn(name, quantity, price);
-                        JOptionPane.showMessageDialog(cashReturnTransactionFrame,
-                                "Cash return successfully completed");
-                    }
+                    itemPresentHekper(name, quantity, price, cashReturnTransactionFrame);
 
                     cashReturnTransactionFrame.dispose();
                 } catch (NumberFormatException ex) {
@@ -1092,6 +1118,19 @@ public class ShopManagement {
                 }
             }
         });
+    }
+
+    private void itemPresentHekper(String name, int quantity, double price, JFrame cashReturnTransactionFrame) {
+        if (!inventory.isItemPresent(name)) {
+            JOptionPane.showMessageDialog(cashReturnTransactionFrame,
+                    "The item is not present in Inventory",
+                    "Invalid Item", JOptionPane.ERROR_MESSAGE);
+        } else {
+            CashSales cashSales = new CashSales();
+            cashSales.cashReturn(name, quantity, price);
+            JOptionPane.showMessageDialog(cashReturnTransactionFrame,
+                    "Cash return successfully completed");
+        }
     }
 
     private void helperForCashReturn(JLabel nameLabel, JTextField nameField, JLabel quantityLabel,
