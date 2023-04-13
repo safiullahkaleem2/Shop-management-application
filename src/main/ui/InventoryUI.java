@@ -11,7 +11,7 @@ import java.awt.event.ActionListener;
 
 import static java.lang.Double.parseDouble;
 import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
-// This class is Inventory UI class
+// This class is Inventory UI class which used to design the manage inventory menu in the application
 
 public class InventoryUI {
     private JFrame frame;
@@ -68,12 +68,14 @@ public class InventoryUI {
         inventoryFrame.setVisible(true);
     }
 
+    //effects: sets the grid
     private void gbcHelper(GridBagConstraints gbc) {
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.insets = new Insets(10, 10, 10, 10);
     }
 
+    //effects: helps in building the grid
     private void gridBuildingHelper(JLabel inventoryLabel, JButton addItemButton, JButton removeItemButton,
                                     JButton thresholdCheckButton, JButton viewInventoryButton, JButton quitButton,
                                     JPanel inventoryButtonPanel, GridBagConstraints gbc) {
@@ -90,6 +92,7 @@ public class InventoryUI {
         inventoryButtonPanel.add(quitButton, gbc);
     }
 
+    //effects: adds action listener to the button
     private void actionListenerHelper(JButton addItemButton, JButton removeItemButton, JButton thresholdCheckButton,
                                       JButton viewInventoryButton) {
         addItemButton.addActionListener(new ActionListener() {
@@ -122,6 +125,7 @@ public class InventoryUI {
         });
     }
 
+    //effects: creates a quit button
     private void quitButtonHelper(JButton quitButton, JFrame inventoryFrame) {
         quitButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -169,6 +173,7 @@ public class InventoryUI {
         addItemFrame.setVisible(true);
     }
 
+    //effects: creates frame for adding items
     private void addItemsToInventoryHelper(JFrame addItemFrame, JLabel nameLabel, JTextField nameField,
                                            JLabel quantityLabel, JTextField quantityField, JLabel unitLabel,
                                            JTextField unitField, JLabel thresholdLabel, JTextField thresholdField,
@@ -195,6 +200,8 @@ public class InventoryUI {
     }
 
 
+    //modifies:this
+    //effects: adds item after checking all the conditionals
     private void helperForAddingItems(JTextField nameField, JTextField quantityField, JTextField unitField,
                                       JTextField thresholdField, JTextField priceField, JFrame addItemFrame) {
         String name = nameField.getText().toLowerCase();
@@ -223,6 +230,7 @@ public class InventoryUI {
         helperForHelperOfAddItem(addItemFrame, name, quantity, unit, threshold, price);
     }
 
+    //effects: creates an error message
     private boolean helperForHelper2(JFrame addItemFrame, String name) {
         if (inventory.isItemPresent(name)) {
             JOptionPane.showMessageDialog(addItemFrame,
@@ -234,6 +242,7 @@ public class InventoryUI {
         return false;
     }
 
+    //effects:creates suitable prompts
     private void helperForHelperOfAddItem(JFrame addItemFrame, String name, int quantity, String unit, int threshold,
                                           double price) {
         if (price > bank.getBalance()) {
@@ -249,6 +258,8 @@ public class InventoryUI {
         }
     }
 
+    // modifies:this
+    // effects: removes item from inventory
     private void removeItemFromInventory() {
         JTextField itemNameField = new JTextField();
         Object[] message = {
@@ -275,6 +286,7 @@ public class InventoryUI {
         }
     }
 
+    //effects: gives item removal prompt
     private void itemRemovalConfirmation(String name) {
         if (inventory.removeItem(name)) {
             JOptionPane.showMessageDialog(null, "Item removed successfully");
@@ -284,6 +296,7 @@ public class InventoryUI {
     }
 
 
+    //effects:creates a general frame
     private void creditTransactionFrame(JLabel nameLabel, JTextField nameField, JLabel customerLabel,
                                         JTextField customerField, JLabel quantityLabel, JTextField quantityField,
                                         JLabel priceLabel, JTextField priceField, JPanel creditTransactionPanel,
@@ -311,6 +324,7 @@ public class InventoryUI {
         gbc.gridwidth = 2;
     }
 
+    //effects: gives prompt for item not Present
     private void conditionalCheckerRefactor(JFrame cashTransactionFrame, String itemNotPresentInInventory,
                                             String invalidItem) {
         JOptionPane.showMessageDialog(cashTransactionFrame,
@@ -319,11 +333,12 @@ public class InventoryUI {
                 JOptionPane.ERROR_MESSAGE);
     }
 
+    //effects: displays all inventory items
     private void allInventoryItems() {
         String[] columnNames = {"Name", "Quantity", "Price", "Threshold"};
-        Object[][] data = new Object[inventory.getInventory().length()][4];
+        Object[][] data = new Object[Inventory.getInventory().length()][4];
 
-        for (int i = 0; i < inventory.getInventory().length(); i++) {
+        for (int i = 0; i < Inventory.getInventory().length(); i++) {
             Item item = inventory.get(i);
             data[i][0] = item.getItemName();
             data[i][1] = item.getQuantity();
@@ -341,6 +356,7 @@ public class InventoryUI {
         frame.setVisible(true);
     }
 
+    //effects: checks threshold
     private void thresholdCheck() {
         JTextField itemNameField = new JTextField(10);
 
@@ -365,6 +381,7 @@ public class InventoryUI {
         }
     }
 
+    //effects: check the conditionals of the threshold
     private void thresholdCheckHelper(String name, Item item) {
         if (item != null) {
             if (item.belowThreshold()) {

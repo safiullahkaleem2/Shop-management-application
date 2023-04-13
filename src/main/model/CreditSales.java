@@ -24,9 +24,10 @@ public class CreditSales  {
         Creditor creditor;
         Item item = Inventory.getInventory().giveItem(itemName);
 
-        creditor = creditors.getCreditor(creditorName);
+        creditor = Creditors.getCreditor(creditorName);
         item.reduceQuantity(quantity);
         creditor.addOwed(price);
+        EventLog.getInstance().logEvent(new Event("Performed a credit sale"));
 
     }
 
@@ -43,6 +44,7 @@ public class CreditSales  {
         Creditor creditor = Creditors.getCreditor(creditorName);
         Item item = Inventory.getInventory().giveItem(itemName);
         increaseInventory(item, creditor, quantity, price);
+        EventLog.getInstance().logEvent(new Event("Recorded a credit return"));
 
 
     }
@@ -55,7 +57,7 @@ public class CreditSales  {
     public void increaseInventory(Item item, Creditor creditor, int quantity, double price) {
         item.increaseQuantity(quantity);
         creditor.subtractOwed(price);
-        System.out.println("Credit return recorded");
+
 
 
     }

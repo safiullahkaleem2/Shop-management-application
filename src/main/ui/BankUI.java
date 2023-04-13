@@ -7,7 +7,7 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.data.category.DefaultCategoryDataset;
 
 import javax.swing.*;
-// This class is Bank UI class
+// This class is Bank UI class which used to design the check bank details menu in the application
 
 public class BankUI {
     private Bank bank;

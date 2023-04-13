@@ -93,6 +93,7 @@ public class Item implements Writable {
         quantity = quantity - amount;
     }
 
+    //effect: convert the object to JSON
     @Override
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
@@ -105,6 +106,6 @@ public class Item implements Writable {
         return json;
     }
 
-    // EFFECTS: returns an unmodifiable list of thingies in this workroom
+
 
 }

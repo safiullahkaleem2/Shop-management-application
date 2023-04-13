@@ -22,11 +22,13 @@ public class Bank implements Writable {
     }
 
 
-
+    // effects: returns bank
     public static Bank getBank() {
         return bank;
     }
 
+
+    //effects:initializes a new bank
     public static void getBank(double balance) {
         if (bank == null) {
             bank = new Bank(balance);
@@ -82,6 +84,7 @@ public class Bank implements Writable {
         return receipts;
     }
 
+    //effect: convert the object to JSON
     @Override
     public JSONObject toJson() {
         JSONObject json = new JSONObject();

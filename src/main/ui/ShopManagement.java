@@ -1,5 +1,6 @@
 package ui;
 
+import model.Event;
 import model.*;
 import persistance.JsonReader;
 import persistance.JsonWriter;
@@ -13,7 +14,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import static java.lang.Double.parseDouble;
-// Shop Management application
+
+//  this class runs the Shop Management application.
+//  The application allows users to manage inventory, creditors, bank, and transactions.
+//
 
 public class ShopManagement {
     private final JButton button1;
@@ -23,18 +27,17 @@ public class ShopManagement {
     private final JButton button5;
     private Creditors creditors;
 
-
+    private EventLog eventlog;
     private Bank bank;
     private Inventory inventory;
-    private JsonWriter jsonWriter;
-    private JsonReader jsonReader;
 
     private JFrame frame;
     private JButton button;
 
 
-    // EFFECTS: runs the teller application
+    // EFFECTS: runs the shop management application
     public ShopManagement() throws FileNotFoundException {
+        eventlog = EventLog.getInstance();
         frame = new JFrame("Shop Management System");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(700, 800);
@@ -71,6 +74,10 @@ public class ShopManagement {
 
     }
 
+//
+//    modifies: this
+//    effects: Adds action listeners to the main application buttons.
+//
     private void mainActionListener() {
         // add an action listener to the buttons
         button.addActionListener(new ActionListener() {
@@ -93,11 +100,18 @@ public class ShopManagement {
         });
         button5.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                frame.dispose();
+                printLog(eventlog);
                 System.exit(0);
             }
         });
     }
 
+//
+//
+//     modifies: this
+//     effects: Adds action listeners to specific buttons.
+//
     private void mainActionListenerHelper() {
         button1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -111,7 +125,7 @@ public class ShopManagement {
                 frame.setVisible(false);
                 CreditorsUI creditorsUI = new CreditorsUI(button, button1, button2,button3,button4,
                         button5, creditors,frame);
-                creditorsUI.manageCreditors();;
+                creditorsUI.manageCreditors();
             }
         });
         button3.addActionListener(new ActionListener() {
@@ -123,6 +137,9 @@ public class ShopManagement {
         });
     }
 
+
+//    modifies: buttonPanel
+//    effects: Adds buttons to the button panel using GridBagConstraints.
     private void addButtonsToPanel(JPanel buttonPanel, GridBagConstraints gbc) {
         buttonPanel.add(button, gbc);
         gbc.gridy++;
@@ -137,6 +154,9 @@ public class ShopManagement {
         buttonPanel.add(button5, gbc);
     }
 
+//     modifies: this
+//     effects: Prompts the user to load a saved file or start a new shop, then initializes the application accordingly.
+//
     private void initializer() {
         int result = JOptionPane.showConfirmDialog(null, "Do you want to load a previously Saved"
                 + " file?", "   Load", JOptionPane.YES_NO_OPTION);
@@ -156,7 +176,9 @@ public class ShopManagement {
 
     }
 
-
+//     modifies: this
+//     effects: Sets up the application for a new shop with the given starting balance.
+//
     private void initializeNewShop() {
         double balance = 0;
         boolean validInput = false;
@@ -182,6 +204,7 @@ public class ShopManagement {
         starter(balance);
     }
 
+    //effects: initializes bank, inventory and creditors
     private void starter(double balance) {
         Bank.getBank(balance);
         bank = Bank.getBank();
@@ -189,9 +212,7 @@ public class ShopManagement {
         creditors = new Creditors();
     }
 
-    // EFFECTS: manages transactions
-
-
+    // effects: aligns grid
     private void gbcHelper(GridBagConstraints gbc) {
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -199,7 +220,7 @@ public class ShopManagement {
     }
 
 
-
+    // effects: creates an error prompt
     private void conditionalCheckerRefactor(JFrame cashTransactionFrame, String itemNotPresentInInventory,
                                             String invalidItem) {
         JOptionPane.showMessageDialog(cashTransactionFrame,
@@ -218,8 +239,8 @@ public class ShopManagement {
             if (!folder.exists()) {
                 folder.mkdirs();
             }
-            jsonWriter = new JsonWriter("./data/" + name + "/inventory.json",
-                    "./data/" + name + "/creditors.json","./data/" + name + "/bank.json");
+            JsonWriter jsonWriter = new JsonWriter("./data/" + name + "/inventory.json",
+                    "./data/" + name + "/creditors.json", "./data/" + name + "/bank.json");
             jsonWriter.open();
             jsonWriter.write(inventory,creditors,bank);
 
@@ -234,8 +255,8 @@ public class ShopManagement {
     // EFFECTS: loads workroom from file
     private void load(String name) {
         try {
-            jsonReader = new JsonReader("./data/" + name + "/inventory.json",
-                    "./data/" + name + "/creditors.json","./data/" + name + "/bank.json");
+            JsonReader jsonReader = new JsonReader("./data/" + name + "/inventory.json",
+                    "./data/" + name + "/creditors.json", "./data/" + name + "/bank.json");
             inventory = jsonReader.read();
             creditors = jsonReader.readC();
             bank = jsonReader.readB();
@@ -246,5 +267,11 @@ public class ShopManagement {
         }
     }
 
+    //effect: prints the Event log on the console
+    public void printLog(EventLog el) {
+        for (Event next : el) {
+            System.out.println(next);
+        }
 
+    }
 }

@@ -16,9 +16,9 @@ import java.util.List;
 // The size method returns the number of creditors in the list.
 
 public class Creditors implements Writable {
-
     private static ArrayList<Creditor> creditors;
 
+    //effects: constructs list of creditor
     public Creditors() {
         creditors =  new ArrayList<Creditor>();
     }
@@ -28,6 +28,8 @@ public class Creditors implements Writable {
     // Effects: Adds a new creditor to the list of creditors, prints a success message to the console
     public static void addCreditors(Creditor creditor) {
         creditors.add(creditor);
+        EventLog.getInstance().logEvent(new Event("Creditor added successfully"));
+
 
     }
 
@@ -55,7 +57,9 @@ public class Creditors implements Writable {
             Creditor creditor = creditors.get(n);
             if (name.equals(creditor.getName())) {
                 creditors.remove(n);
+                EventLog.getInstance().logEvent(new Event("Creditor removed successfully"));
                 return true;
+
             }
         }
 
@@ -93,6 +97,7 @@ public class Creditors implements Writable {
         return creditors.size();
     }
 
+    //effect: convert the object to JSON
     @Override
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
@@ -111,6 +116,7 @@ public class Creditors implements Writable {
         return jsonArray;
     }
 
+    //effects: returns creditors
     public List<Creditor> getCreditors() {
         return creditors;
     }

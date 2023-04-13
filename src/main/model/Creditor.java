@@ -11,7 +11,7 @@ public class Creditor implements Writable {
     private String name;
     private double owed;
 
-
+    //effects: constructs a new creditor
     public Creditor(String name) {
         this.name = name;
         owed = 0;
@@ -54,6 +54,7 @@ public class Creditor implements Writable {
     public void paymentReceived(double amount) {
         subtractOwed(amount);
         Bank.getBank().addBalance(amount);
+        EventLog.getInstance().logEvent(new Event("Payment received by the creditor"));
 
 
     }
@@ -67,10 +68,6 @@ public class Creditor implements Writable {
     }
 
 
-     // Requires: N/A
-     // Modifies: N/A
-     // Effects: Returns the number of payment days.
-
 
 
      // Requires: N/A
@@ -81,7 +78,7 @@ public class Creditor implements Writable {
         this.name = name;
     }
 
-
+    //effect: convert the object to JSON
     @Override
     public JSONObject toJson() {
         JSONObject json = new JSONObject();

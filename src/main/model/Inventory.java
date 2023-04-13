@@ -18,10 +18,12 @@ public class Inventory implements Writable {
     private ArrayList<Item> items;
     protected static final int CAPACITY = 4;
 
+    //effects: constructs inventory
     private Inventory() {
         items = new ArrayList<Item>();
     }
 
+    //effects: returns inventory
     public static Inventory getInventory() {
         if (inventory == null) {
             inventory = new Inventory();
@@ -51,7 +53,7 @@ public class Inventory implements Writable {
             Item item = inventory.items.get(n);
             if (name.equals(item.getItemName())) {
                 inventory.items.remove(n);
-                System.out.println("Item removed successfully");
+                EventLog.getInstance().logEvent(new Event("Removed item from inventory"));
                 return true;
 
             }
@@ -72,6 +74,7 @@ public class Inventory implements Writable {
         bank.subtractBalance(price);
         Item item = new Item(name, quantity, unit, threshold);
         boolean added = addItem(item); // add the new item to the inventory
+        EventLog.getInstance().logEvent(new Event("Bought new item for inventory"));
         return added;
 
     }
@@ -112,6 +115,7 @@ public class Inventory implements Writable {
         return inventory.items.get(n);
     }
 
+    //effect: convert the object to JSON
     @Override
     public JSONObject toJson() {
         JSONObject json = new JSONObject();

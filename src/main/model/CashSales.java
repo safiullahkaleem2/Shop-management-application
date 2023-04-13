@@ -14,6 +14,7 @@ public class CashSales {
         Item item = Inventory.getInventory().giveItem(itemName);
         item.reduceQuantity(quantity);
         Bank.getBank().addBalance(price);
+        EventLog.getInstance().logEvent(new Event("Performed Cash Sales"));
 
     }
 
@@ -27,7 +28,7 @@ public class CashSales {
 
         item.increaseQuantity(quantity);
         Bank.getBank().subtractBalance(price);
-        System.out.println("Return successfully recorded");
+        EventLog.getInstance().logEvent(new Event("Performed a cash return"));
     }
 
 }

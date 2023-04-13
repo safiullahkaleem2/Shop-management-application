@@ -18,7 +18,7 @@ public class CreditorsUI {
     private JButton button5;
     private Creditors creditors;
     private JFrame frame;
-// This class is Creditors UI class
+// This class is Creditors UI class which used to design the manage creditors menu in the application
 
     public CreditorsUI(JButton button, JButton button1, JButton button2, JButton button3, JButton button4,
                        JButton button5,Creditors creditors,JFrame frame) {
@@ -56,6 +56,7 @@ public class CreditorsUI {
         creditorFrame.setVisible(true);
     }
 
+    //effects: makes the transaction frame
     private void manageTransactionRefactor(JFrame transactionFrame, JLabel transactionLabel, JButton creditButton,
                                            JButton cashButton, JButton creditReturnButton, JButton cashReturnButton,
                                            JButton quitButton) {
@@ -74,6 +75,7 @@ public class CreditorsUI {
         quitButton.setBounds(button5.getBounds());
     }
 
+    //effects:add actions listeners to the button
     private void creditorActionListeners(JFrame creditorFrame, JButton listCreditorsButton,
                                          JButton addCreditorButton, JButton removeCreditorButton,
                                          JButton recordPaymentButton, JButton backButton) {
@@ -102,6 +104,7 @@ public class CreditorsUI {
         creditorsActionListerners2(creditorFrame, recordPaymentButton, backButton);
     }
 
+    //effects: add action listeners to the button
     private void creditorsActionListerners2(JFrame creditorFrame, JButton recordPaymentButton, JButton backButton) {
         recordPaymentButton.addActionListener(new ActionListener() {
             @Override
@@ -120,6 +123,7 @@ public class CreditorsUI {
         });
     }
 
+    //effects: list all the creditors
     private void listCreditors() {
         String[] columnNames = {"Name", "Amount Owed"};
         Object[][] data = new Object[creditors.size()][2];
@@ -141,7 +145,8 @@ public class CreditorsUI {
         frame.setVisible(true);
     }
 
-
+    // modifies:this
+    //effects: adds creditor
     private void addCreditor() {
         JTextField itemNameField = new JTextField();
         Object[] message = {
@@ -181,7 +186,7 @@ public class CreditorsUI {
                     "Confirm Removal", JOptionPane.YES_NO_OPTION);
             if (confirmationOption == JOptionPane.YES_OPTION) {
                 if (creditors.removeCreditor(name)) {
-                    JOptionPane.showMessageDialog(null,"Creditor Added successfully");
+                    JOptionPane.showMessageDialog(null,"Creditor removed successfully");
                 } else {
                     JOptionPane.showMessageDialog(null,"Cannot find the given Creditor");
 
@@ -218,12 +223,13 @@ public class CreditorsUI {
 
     }
 
+    //effects: adds action listener to record payment button
     private void recordPaymentHelper(JButton confirm, JTextField nameField, JTextField paymentAmountField) {
         confirm.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    Creditor creditor = creditors.getCreditor(nameField.getText());
+                    Creditor creditor = Creditors.getCreditor(nameField.getText());
                     double paymentAmount = Double.parseDouble(paymentAmountField.getText());
                     if (creditor == null) {
                         JOptionPane.showMessageDialog(null,

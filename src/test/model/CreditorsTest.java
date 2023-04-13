@@ -103,4 +103,5 @@ public class CreditorsTest {
         testCreditors.add(creditor2);
         assertEquals(testCreditors,creditors.getCreditors());
     }
+
 }

@@ -49,6 +49,9 @@ public class TransactionUI {
         transactionFrame.setVisible(true);
     }
 
+    // REQUIRES: Valid JButton objects for creditReturnButton and cashReturnButton
+// MODIFIES: creditReturnButton, cashReturnButton
+// EFFECTS: Adds ActionListener to creditReturnButton and cashReturnButton for handling credit and cash returns
     private void creditReturnActionListener(JButton creditReturnButton, JButton cashReturnButton) {
         creditReturnButton.addActionListener(new ActionListener() {
             @Override
@@ -64,6 +67,10 @@ public class TransactionUI {
         });
     }
 
+    // REQUIRES: Valid instances of JFrame, JLabel, and JButton components
+    // MODIFIES: transactionFrame
+    // EFFECTS: Adds the specified components to the transactionFrame and sets their bounds according to the specified
+    // button bounds
     private void manageTransactionRefactor(JFrame transactionFrame, JLabel transactionLabel, JButton creditButton,
                                            JButton cashButton, JButton creditReturnButton, JButton cashReturnButton,
                                            JButton quitButton) {
@@ -82,6 +89,10 @@ public class TransactionUI {
         quitButton.setBounds(button5.getBounds());
     }
 
+    // REQUIRES: Valid JButton instances for creditButton, cashButton, and quitButton
+    // MODIFIES: creditButton, cashButton, quitButton
+    // EFFECTS: Adds action listeners to creditButton, cashButton, and quitButton for recording transactions and closing
+    // the transaction frame
     private void addingListenersToTransactionButton(JFrame transactionFrame, JButton creditButton, JButton cashButton,
                                                     JButton quitButton) {
         creditButton.addActionListener(new ActionListener() {
@@ -105,7 +116,11 @@ public class TransactionUI {
         });
     }
 
-    //EFFECTS: records cash return
+
+    // REQUIRES: Valid input for item name, quantity, and price
+    // MODIFIES: cashReturnTransactionFrame
+    // EFFECTS: Displays a new window for recording a cash return transaction, including input fields for item name,
+    // quantity, and price
     public void recordCashReturn() {
         JFrame cashReturnTransactionFrame = new JFrame("Perform Cash Return");
         cashReturnTransactionFrame.setSize(400, 300);
@@ -133,6 +148,10 @@ public class TransactionUI {
         cashReturnTransactionFrame.setVisible(true);
     }
 
+    // REQUIRES: Valid input for item name, customer name, quantity, and price
+    // MODIFIES: creditReturnTransactionFrame
+    //EFFECTS: Displays a new window for recording a credit return transaction, including input fields for item name,
+    // customer name, quantity, and price
     public void recordCreditReturn() {
         JFrame creditReturnTransactionFrame = new JFrame("Perform Credit Return");
         creditReturnTransactionFrame.setSize(400, 300);
@@ -162,6 +181,10 @@ public class TransactionUI {
         creditReturnTransactionFrame.setVisible(true);
     }
 
+    // REQUIRES: Valid instances of JFrame, JTextField, JButton, JPanel, and GridBagConstraints components
+    // MODIFIES: creditReturnPanel, returnButton
+    // EFFECTS: Adds components to the creditReturnPanel and sets up an action listener for the returnButton to handle
+    // credit return actions
     private void creditReturnHelper2(JFrame creditReturnTransactionFrame, JTextField nameField,
                                      JTextField customerField, JTextField quantityField, JTextField priceField,
                                      JButton returnButton, JPanel creditReturnPanel, GridBagConstraints gbc) {
@@ -183,6 +206,9 @@ public class TransactionUI {
         });
     }
 
+    // REQUIRES: Valid instances of JLabel, JTextField, JPanel, and GridBagConstraints components
+    // MODIFIES: creditReturnPanel
+    // EFFECTS: Adds the specified components to the creditReturnPanel using the provided GridBagConstraints
     private void creditReturnGrid(JLabel nameLabel, JTextField nameField, JLabel customerLabel,
                                   JTextField customerField, JLabel quantityLabel, JTextField quantityField,
                                   JLabel priceLabel, JPanel creditReturnPanel, GridBagConstraints gbc) {
@@ -215,6 +241,11 @@ public class TransactionUI {
         creditReturnPanel.add(priceLabel, gbc);
     }
 
+    // REQUIRES: Valid instances of JTextField for nameField, customerField, quantityField, and priceField,
+    // and a JFrame for creditReturnTransactionFrame
+    // MODIFIES: None
+    // EFFECTS: Parses input from the JTextFields and calls creditReturnHelper3 to handle the credit return transaction;
+    // shows error message for invalid input
     private void creditReturnActionPerformed(JTextField nameField, JTextField customerField,
                                              JTextField quantityField, JTextField priceField,
                                              JFrame creditReturnTransactionFrame) {
@@ -235,6 +266,11 @@ public class TransactionUI {
         }
     }
 
+    // REQUIRES: Valid creditReturnTransactionFrame, name, customerName, quantity, and price
+    // MODIFIES: creditReturnTransactionFrame
+    // EFFECTS: Validates the input and records the credit return transaction if successful, or shows an error message
+    // if there is a problem with the input
+
     private void creditReturnHelper3(JFrame creditReturnTransactionFrame, String name, String customerName,
                                      int quantity, double price) {
         if (Creditors.getCreditor(customerName) == null) {
@@ -254,12 +290,19 @@ public class TransactionUI {
         }
     }
 
+    // REQUIRES: A valid GridBagConstraints instance (gbc)
+    // MODIFIES: gbc
+    // EFFECTS: Sets the initial properties of the GridBagConstraints instance for proper layout
+
     private void gbcHelper(GridBagConstraints gbc) {
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.insets = new Insets(10, 10, 10, 10);
     }
 
+    // REQUIRES: Valid instances of JFrame, JTextField, and JButton components
+    // MODIFIES: transactionButton
+    // EFFECTS: Adds an action listener to the transactionButton for handling cash return transactions
     private void cashReturnHelper(JFrame cashReturnTransactionFrame, JTextField nameField, JTextField quantityField,
                                   JTextField priceField, JButton transactionButton) {
         transactionButton.addActionListener(new ActionListener() {
@@ -271,7 +314,7 @@ public class TransactionUI {
                     double price = Double.parseDouble(priceField.getText());
 
 
-                    itemPresentHekper(name, quantity, price, cashReturnTransactionFrame);
+                    itemPresentHelper(name, quantity, price, cashReturnTransactionFrame);
 
                     cashReturnTransactionFrame.dispose();
                 } catch (NumberFormatException ex) {
@@ -282,7 +325,11 @@ public class TransactionUI {
         });
     }
 
-    private void itemPresentHekper(String name, int quantity, double price, JFrame cashReturnTransactionFrame) {
+    // REQUIRES: Valid name, quantity, price, and cashReturnTransactionFrame
+    // MODIFIES: cashReturnTransactionFrame
+    // EFFECTS: Validates the input and records the cash return transaction if successful, or shows an error message if
+    // there is a problem with the input
+    private void itemPresentHelper(String name, int quantity, double price, JFrame cashReturnTransactionFrame) {
         if (!inventory.isItemPresent(name)) {
             JOptionPane.showMessageDialog(cashReturnTransactionFrame,
                     "The item is not present in Inventory",
@@ -295,6 +342,10 @@ public class TransactionUI {
         }
     }
 
+    // REQUIRES: Valid instances of JLabel, JTextField, JButton, JPanel, and GridBagConstraints components
+    // MODIFIES: cashTransactionPanel
+    // EFFECTS: Adds components to cashTransactionPanel using the specified GridBagConstraints to create a cash return
+    // form
     private void helperForCashReturn(JLabel nameLabel, JTextField nameField, JLabel quantityLabel,
                                      JTextField quantityField, JLabel priceLabel, JTextField priceField,
                                      JButton transactionButton, JPanel cashTransactionPanel, GridBagConstraints gbc) {
@@ -325,6 +376,9 @@ public class TransactionUI {
         cashTransactionPanel.add(transactionButton, gbc);
     }
 
+    // REQUIRES: Valid instances of JTextField, JLabel, JPanel, and GridBagConstraints components
+    // MODIFIES: cashTransactionPanel
+    // EFFECTS: Adds nameField and quantityLabel to cashTransactionPanel using the specified GridBagConstraints
     private void helperForCashReturn2(JTextField nameField, JLabel quantityLabel, JPanel cashTransactionPanel,
                                       GridBagConstraints gbc) {
         gbc.gridx = 1;
@@ -336,7 +390,11 @@ public class TransactionUI {
         cashTransactionPanel.add(quantityLabel, gbc);
     }
 
-    // EFFECTS: records a cash transaction
+
+    // REQUIRES: None
+    // MODIFIES: cashTransactionFrame
+    // EFFECTS: Creates a new JFrame for recording cash transactions, including input fields for item name,
+    // quantity, and price
     private void recordCashTransaction() {
         JFrame cashTransactionFrame = new JFrame("Perform Cash Transaction");
         cashTransactionFrame.setSize(400, 300);
@@ -358,6 +416,9 @@ public class TransactionUI {
         cashTransactionActionListener(cashTransactionFrame, nameField, quantityField, priceField, transactionButton);
     }
 
+    // REQUIRES: Valid instances of JFrame, JTextField, and JButton components
+    // MODIFIES: transactionButton
+    // EFFECTS: adds actionlisteners to buttons
     private void cashTransactionActionListener(JFrame cashTransactionFrame, JTextField nameField,
                                                JTextField quantityField, JTextField priceField,
                                                JButton transactionButton) {
@@ -372,6 +433,7 @@ public class TransactionUI {
         });
     }
 
+    //EFFECTS: checks the conditions for cash transaction
     private void cashTransactionHelper(String name, int quantity, double price, JFrame cashTransactionFrame) {
         try {
             if (!inventory.isItemPresent(name)) {
@@ -401,6 +463,8 @@ public class TransactionUI {
         }
     }
 
+    //modifies: inventory, bank
+    //effect: performs a cash transaction
     private void doCashTransaction(String name, int quantity, double price, JFrame cashTransactionFrame) {
         CashSales cashSales = new CashSales();
         cashSales.sales(name, quantity, price);
@@ -408,6 +472,7 @@ public class TransactionUI {
         cashTransactionFrame.dispose();
     }
 
+    //effects: gives item not present error
     private void conditionalCheckerRefactor(JFrame cashTransactionFrame, String itemNotPresentInInventory,
                                             String invalidItem) {
         JOptionPane.showMessageDialog(cashTransactionFrame,
@@ -416,6 +481,8 @@ public class TransactionUI {
                 JOptionPane.ERROR_MESSAGE);
     }
 
+    //modifies:frame
+    //effects: adds buttons to frame
     private void refactoring(JFrame cashTransactionFrame, JButton transactionButton, JPanel cashTransactionPanel,
                              GridBagConstraints gbc) {
         cashTransactionPanel.add(transactionButton, gbc);
@@ -424,6 +491,7 @@ public class TransactionUI {
         cashTransactionFrame.setVisible(true);
     }
 
+    //effects: makes the cash transaction grid
     private void cashTransactionGrid(int gbc, int horizontal, JPanel cashTransactionPanel, JLabel nameLabel,
                                      GridBagConstraints gbc1, JTextField nameField, int gridy, JLabel quantityLabel,
                                      JTextField quantityField, JLabel priceLabel, JTextField priceField) {
@@ -446,6 +514,7 @@ public class TransactionUI {
         gbc1.gridwidth = 2;
     }
 
+    //modifies: inventory, creditors
     //EFFECTS: records credit transaction
     private void recordCreditTransaction() {
         JFrame creditTransactionFrame = new JFrame("Perform Credit Transaction");
@@ -476,6 +545,7 @@ public class TransactionUI {
                 transactionButton);
     }
 
+    //effects: add action listener to credit transaction button
     private void creditTransactionActionListener(JFrame creditTransactionFrame, JTextField nameField,
                                                  JTextField customerField, JTextField quantityField,
                                                  JTextField priceField, JButton transactionButton) {
@@ -487,6 +557,7 @@ public class TransactionUI {
         });
     }
 
+    //effects: creates the credit transaction grid
     private void creditTransactionGrid(JLabel nameLabel, JTextField nameField, JLabel customerLabel,
                                        JTextField customerField, JLabel quantityLabel, JTextField quantityField,
                                        JLabel priceLabel, JTextField priceField, JButton transactionButton,
@@ -514,6 +585,8 @@ public class TransactionUI {
         creditTransactionPanel.add(transactionButton, gbc);
     }
 
+    //modifies:grid
+    //effects: sets alignments of the grid
     private void creditTransactionGridHelper(JLabel nameLabel, JTextField nameField, JPanel creditTransactionPanel,
                                              GridBagConstraints gbc) {
         gbc.gridx = 0;
@@ -525,7 +598,7 @@ public class TransactionUI {
         gbc.gridy = 1;
     }
 
-
+    //effects:helps in performing credit transaction
     private void listenerForCredit(JTextField nameField, JTextField customerField, JTextField quantityField,
                                    JTextField priceField, JFrame creditTransactionFrame) {
         String name = nameField.getText();
@@ -536,6 +609,7 @@ public class TransactionUI {
         conditionalCheckerHelper(creditTransactionFrame, name, customerName, quantity, price);
     }
 
+    //effects: checks for conditions and gives appropriate error messages
     private void conditionalCheckerHelper(JFrame creditTransactionFrame, String name, String customerName,
                                           int quantity, double price) {
         if (price < 0) {
@@ -562,6 +636,7 @@ public class TransactionUI {
         }
     }
 
+    //effects: performs the credit sales
     private void performCreditSales(JFrame creditTransactionFrame, String name, String customerName, int quantity,
                                     double price, CreditSales creditSales) {
         creditSales.sales(name, customerName, quantity, price);
