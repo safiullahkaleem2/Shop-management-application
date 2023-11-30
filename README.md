@@ -29,50 +29,7 @@ This project would be
 particularly useful for any individual or businesses that have a physical storefront and need to track inventory levels and sales,as well
 as businesses that sell goods online and need to keep track of inventory and shipping.
  
-### Why I am Interested in this project?
-
-I am interested in this project because it allows me to apply my knowledge of business and computer science to create a 
-valuable tool for small business owners and entrepreneurs. As a BUCS student, I am particularly excited about the 
-opportunity to combine my interests in technology and business to create a solution that can help businesses run 
-more efficiently and effectively. Additionally, my dad's experience as a business owner has given me a firsthand
-understanding of the challenges that businesses face when it comes to managing inventory and tracking sales. 
-This has motivated me to choose this as my project.
-
-### User Stories
-
-- As a user, I want to be able to use buttons to add new items to my shop inventory with their quantities
-- As a user, I want to be able to use buttons and fields to record sales and adjust inventory accordingly, so that I can
-keep track of the items that have been sold.
-- As a user, I want to be able to set an inventory limit for each item and receive notifications when the inventory
-falls below the limit, so that I can reorder items before I run out of stock.
-- As a user, I want to be able to generate reports of my inventory, so that I can analyze my business
-performance.
-- As a user, I want to save my items in Inventory.
-- As a user, I want to load my Inventory items from a file
-
-### Phase 4: task 2
-Wed Apr 12 02:00:51 PDT 2023 
-Bought new item for inventory 
-Wed Apr 12 02:01:16 PDT 2023 
-Bought new item for inventory 
-Wed Apr 12 02:01:27 PDT 2023
-Removed item from inventory 
-Wed Apr 12 02:01:51 PDT 2023 
-Creditor added successfully  
-Wed Apr 12 02:01:51 PDT 2023 
-Performed a credit sale   
-Wed Apr 12 02:02:03 PDT 2023 
-Performed Cash Sales 
-Wed Apr 12 02:02:20 PDT 2023 
-Recorded a credit return 
-Wed Apr 12 02:03:20 PDT 2023 
-Performed a cash return 
-Wed Apr 12 02:03:38 PDT 2023 
-Payment received by the creditor 
-Wed Apr 12 02:03:51 PDT 2023 
-Creditor removed successfully 
-
-### Phase 4: task 3
+### Potential Issues in the design
 Upon reviewing the UML diagram, I noticed that the Bank and Inventory classes have a significant amount of coupling.
 This can lead to problems with maintainability and flexibility as changes in one class might inadvertently affect 
 the other. To mitigate this issue, I would adopt a more suitable design pattern, such as the Observer pattern,
@@ -84,3 +41,8 @@ to achieve the desired outcome. This would not only improve code readability but
 extend in the future. Additionally, while building the UI, I noticed that frames are being created in every UI-related
 method, which hampers code readability. To address this, I would refactor the UI code to create and manage frames
 in a centralized manner, making the code more modular and easier to read.
+
+### How to use it?
+Simply clone the project and install the required libraries. If you have any issues or want to make any improvements.
+Feel free to send a pull request.
+
