@@ -51,25 +51,25 @@ performance.
 - As a user, I want to load my Inventory items from a file
 
 ### Phase 4: task 2
-Wed Apr 12 02:00:51 PDT 2023 \
-Bought new item for inventory \
-Wed Apr 12 02:01:16 PDT 2023 \
-Bought new item for inventory \
-Wed Apr 12 02:01:27 PDT 2023 \
-Removed item from inventory \
-Wed Apr 12 02:01:51 PDT 2023 \
-Creditor added successfully  \
-Wed Apr 12 02:01:51 PDT 2023 \
-Performed a credit sale   \
-Wed Apr 12 02:02:03 PDT 2023 \
-Performed Cash Sales \
-Wed Apr 12 02:02:20 PDT 2023 \
-Recorded a credit return \
-Wed Apr 12 02:03:20 PDT 2023 \
-Performed a cash return \
-Wed Apr 12 02:03:38 PDT 2023 \
-Payment received by the creditor \
-Wed Apr 12 02:03:51 PDT 2023 \
+Wed Apr 12 02:00:51 PDT 2023 
+Bought new item for inventory 
+Wed Apr 12 02:01:16 PDT 2023 
+Bought new item for inventory 
+Wed Apr 12 02:01:27 PDT 2023
+Removed item from inventory 
+Wed Apr 12 02:01:51 PDT 2023 
+Creditor added successfully  
+Wed Apr 12 02:01:51 PDT 2023 
+Performed a credit sale   
+Wed Apr 12 02:02:03 PDT 2023 
+Performed Cash Sales 
+Wed Apr 12 02:02:20 PDT 2023 
+Recorded a credit return 
+Wed Apr 12 02:03:20 PDT 2023 
+Performed a cash return 
+Wed Apr 12 02:03:38 PDT 2023 
+Payment received by the creditor 
+Wed Apr 12 02:03:51 PDT 2023 
 Creditor removed successfully 
 
 ### Phase 4: task 3

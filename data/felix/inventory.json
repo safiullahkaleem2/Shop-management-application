@@ -1,1 +1,6 @@
-{"items": []}
+{"items": [{
+    "itemName": "item1",
+    "unit": "kgs",
+    "quantity": "35",
+    "threshold": "20"
+}]}

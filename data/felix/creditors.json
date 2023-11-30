@@ -1,1 +1,4 @@
-{"creditors": []}
+{"creditors": [{
+    "owed": "40000.0",
+    "name": "safi"
+}]}
